@@ -65,7 +65,7 @@ fn main() {
 	v_llama_cpp.backend_init()
 	defer { v_llama_cpp.backend_free() }
 
-	model_path := './qwen2.5-1.5B-int4.gguf'
+	model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
 	println('正在加载模型: ${model_path} ...')
 
 	mut model_params := v_llama_cpp.model_default_params()
@@ -86,19 +86,6 @@ fn main() {
 	println("true")
 	for {
 		input_buffer := os.input('> ')
-		/*
-		mut data := ''
-		mut line := Readline{ skip_empty: true }
-		for {
-		$if linux {
-			data += '\n'
-		}
-		if data == ':q\r\n' || data == ':q\n' {
-			println('EXIT!')
-			exit()
-		}
-		}
-		*/
 		if input_buffer == ':q' {
 			println('EXIT!')
 			exit(1)

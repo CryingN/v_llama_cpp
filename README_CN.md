@@ -39,7 +39,7 @@ v install v_llama_cpp
 
 ### 示例
 
-以下提供了一个基本案例: `./examples/test_qwen2.5_1.5b.v`, 你需要下载 GGUF 格式的模型文件存放在`./examples/`文件。推荐以下来源：
+以下提供了一个基本案例: `./examples/test_deepseek_1.5b.v`, 你需要下载 GGUF 格式的模型文件**DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf**存放在`./examples/`文件。推荐以下来源：
 
 - https://modelscope.cn
 - https://huggingface.co/models

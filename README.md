@@ -27,13 +27,20 @@ It is recommended to obtain the source code under the `./v/vlib/` path:
 
 ```bash
 git clone https://github.com/sakana-ctf/v_llama_cpp
-Direct installation [future]
-bash
-v install v_llama_cpp
-Usage
-Example
-Here is a basic example: ./examples/test_qwen2.5_1.5b.v. You need to download the model file in GGUF format and place it in the ./examples/ directory. Recommended sources include:
+```
 
-https://modelscope.cn
-https://huggingface.co/models
+### Direct installation [future]
+
+```bash
+v install v_llama_cpp
+```
+
+## Usage
+
+### Example
+
+Here is a basic example: `./examples/test_deepseek_1.5b.v`. You need to download the model file **DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf** in GGUF format and place it in the `./examples/` directory. Recommended sources include:
+
+- https://huggingface.co/models
+- https://modelscope.cn
 
