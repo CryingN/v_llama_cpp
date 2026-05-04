@@ -17,19 +17,28 @@ v_llama_cpp 是 [llama.cpp](https://github.com/ggerganov/llama.cpp) 的 V 语言
 
 ## 安装
 
-### 前提条件
+### 自行配置
 
-系统已编译安装好 [llama.cpp](https://github.com/ggerganov/llama.cpp)（动态库）。
-
-### 安装 v_llama_cpp
-
-推荐在`./v/vlib/`路径下获取源码:
+推荐使用git下载源码:
 
 ```bash
+# Github下载
 git clone https://github.com/sakana-ctf/v_llama_cpp
+# 国内可使用Gitee下载
+git clone https://gitee.com/sakana_ctf/v_llama_cpp
 ```
 
+构建并检测llama.cpp环境, 如果没有llama.cpp环境将尝试进行安装:
+
+```bash
+v build.vsh
+```
+
+> 注意: 一般情况vlang在特殊路径或安装llama.cpp需要root权限, 建议使用`sudo v build.vsh`
+
 ### 直接安装[future]
+
+未来计划使用以下命令直接安装:
 
 ```bash
 v install v_llama_cpp

@@ -15,21 +15,32 @@ v_llama_cpp is a V language binding for [llama.cpp](https://github.com/ggerganov
 
 In short, llama.cpp allows you to run large models like Deepseek, Qwen, and ChatGLM locally on consumer-grade hardware.
 
+Here's the English translation:
+
 ## Installation
 
-### Prerequisites
+### Manual Setup
 
-Ensure [llama.cpp](https://github.com/ggerganov/llama.cpp) (dynamic library) is compiled and installed on your system.
-
-### Install v_llama_cpp
-
-It is recommended to obtain the source code under the `./v/vlib/` path:
+It is recommended to download the source code using git:
 
 ```bash
+# Download from Github
 git clone https://github.com/sakana-ctf/v_llama_cpp
+# For users in China, use Gitee
+git clone https://gitee.com/sakana_ctf/v_llama_cpp
 ```
 
-### Direct installation [future]
+Build and detect the llama.cpp environment. If no llama.cpp environment exists, it will attempt to install it:
+
+```bash
+v build.vsh
+```
+
+> Note: Due to special Vlang installation paths and the need for root privileges when installing llama.cpp, it is recommended to use `sudo v build.vsh`
+
+### Direct Installation [future]
+
+Direct installation using the following command is planned for the future:
 
 ```bash
 v install v_llama_cpp
