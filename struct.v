@@ -46,6 +46,15 @@ pub fn (tokens Tokens) batch_get_one(n_tokens int) Batch {
 
 // Vocab
 
+pub fn (vocab Vocab) tokenize(prompt string, tokens Tokens, n_tokens_max int, add_special bool, parse_special bool) !int {
+        result := C.llama_tokenize(vocab, prompt.str, prompt.len, tokens.data, n_tokens_max, add_special, parse_special)
+        if result < 0 {
+                return error('[Error] ./v_llama_cpp/llama.v tokenize(): Tokenization failed.')
+        }
+        return result
+}
+
+
 pub fn (vocab Vocab) is_eog(token_id int) bool {
 	return C.llama_vocab_is_eog(vocab, token_id)
 }

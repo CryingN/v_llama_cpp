@@ -5,7 +5,7 @@ target := '${dir(@VEXE)}/vlib/'
 
 system('rm -rf ${target}v_llama_cpp')
 if system('cp -r ${source} ${target}') == 0 {
-	println('[True] v_llama_cpp copy by: ${target}')
+	println('[True] v_llama_cpp copy by: ${target}v_llama_cpp')
 } else {
         println('Copy failed!')
         println('  Please copy the system information to the following address for future updates to support your system:')
@@ -67,7 +67,7 @@ $if windows {
         }
 }
 
-$if mac {
+$if macos {
         // mac
         if system('which brew') == 0 {
                 check := system('brew list --formula | grep -q llama.cpp')

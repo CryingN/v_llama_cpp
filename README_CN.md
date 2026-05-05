@@ -48,7 +48,41 @@ v install v_llama_cpp
 
 ### 示例
 
-以下提供了一个基本案例: `./examples/test_deepseek_1.5b.v`, 你需要下载 GGUF 格式的模型文件**DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf**存放在`./examples/`文件。推荐以下来源：
+在`./examples/`文件夹中提供了一些基本案例, 以下是一个最简易的调用方式: `./examples/ez_simple.v`:
+
+```v
+module main
+
+import os
+import v_llama_cpp
+
+fn main() {
+        model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
+        ctx := v_llama_cpp.ez_load_model(model_path, -1, 2048, 512) or {
+                println('load model failed.')
+                return
+        }
+        defer { ctx.ez_free() }
+        input_buffer := os.input('>')
+        prompt := '<｜User｜>${input_buffer}<｜Assistant｜>'
+        print('deepseek:')
+        v_llama_cpp.ez_response(
+                ctx,
+                prompt,
+                512,
+                256,
+                print_token,
+        ) or {
+                println('response failed.')
+        }
+}
+
+fn print_token(token string) {
+        print(token)
+}
+```
+
+你需要下载 GGUF 格式的模型文件**DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf**存放在程序所在目录下。推荐从以下来源下载模型文件：
 
 - https://modelscope.cn
 - https://huggingface.co/models

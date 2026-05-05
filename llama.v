@@ -1,15 +1,10 @@
 module v_llama_cpp
 
-pub fn (vocab Vocab)tokenize(prompt string, tokens Tokens, n_tokens_max int, add_special bool, parse_special bool) !int {
-	result := C.llama_tokenize(vocab, prompt.str, prompt.len, tokens.data, n_tokens_max, add_special, parse_special)
-	if result < 0 {
-		return error('[Error] ./v_llama_cpp/llama.v tokenize(): Tokenization failed.')
-	}
-	return result
+pub fn backend_init() {
+	C.ggml_backend_load_all()
+	C.llama_backend_init()
 }
 
-@[inline]
-pub fn backend_init() { C.llama_backend_init() }
 @[inline]
 pub fn backend_free() { C.llama_backend_free() }
 
@@ -35,7 +30,4 @@ pub fn init_from_model(model Model, context_params ContextParams) !Context {
 	}
 	return context
 }
-
-
-
 

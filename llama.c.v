@@ -1,6 +1,19 @@
 module v_llama_cpp
 
-#flag -lllama
+#flag -lllama -lggml -lggml-base
+
+
+// MacOS
+#flag darwin -I/opt/homebrew/include
+#flag darwin -L/opt/homebrew/lib
+// Linux  
+#flag linux -I/usr/include
+#flag linux -L/usr/lib
+
+// Windows
+#flag windows -IC:/vcpkg/installed/x64-windows/include
+#flag windows -LC:/vcpkg/installed/x64-windows/lib
+
 #include "llama.h"
 
 struct C.llama_model_params {
@@ -82,4 +95,4 @@ fn C.llama_token_to_piece(
 	special bool
 ) int
 
-
+fn C.ggml_backend_load_all()
