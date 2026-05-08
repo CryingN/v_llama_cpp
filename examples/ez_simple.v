@@ -1,11 +1,14 @@
 module main
 
 import os
-import v_llama_cpp
+import v_llama_cpp {
+	ModelUrl
+}
 
 fn main() {
-        model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
-        ctx := v_llama_cpp.ez_load_model(model_path, -1, 2048, 512) or {
+	model_url := 'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
+	model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
+        mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
                 println('load model failed.')
                 return
         }

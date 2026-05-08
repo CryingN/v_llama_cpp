@@ -1,9 +1,36 @@
 #!/usr/bin/env v
 
 source := dir(@FILE)
-target := '${dir(@VEXE)}/vlib/'
+vlib_dir := '${dir(@VEXE)}/vlib'
+target := '${vlib_dir}/v_llama_cpp'
 
-system('rm -rf ${target}v_llama_cpp')
+system('rm -rf ${target}')
+mkdir_all(target) or {
+    println('[False] Failed to create directory: ${err}')
+    return
+}
+
+v_files := ls(source) or {
+        println('Copy failed!')
+        println('  Please copy the system information to the following address for future updates to support your system:')
+        println('  * https://gitee.com/sakana_ctf/v_llama_cpp/issues')
+        println('  * https://github.com/sakana-ctf/v_llama_cpp/issues')
+        println('source :       ${source}')
+        println('target :       ${target}')
+        return
+}
+
+for file in v_files {
+    if file.ends_with('.v') || file.ends_with('v.mod') {
+        src_path := join_path(source, file)
+        dst_path := join_path(target, file)
+        cp(src_path, dst_path) or {
+            println('[Warn] Failed to copy ${file}: ${err}')
+        }
+    }
+}
+
+/*
 if system('cp -r ${source} ${target}') == 0 {
 	println('[True] v_llama_cpp copy by: ${target}v_llama_cpp')
 } else {
@@ -16,6 +43,7 @@ if system('cp -r ${source} ${target}') == 0 {
         println('cmd    :       cp -r ${source} ${target}')
         return
 }
+*/
 
 $if linux {
         // arch

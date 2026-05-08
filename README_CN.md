@@ -54,15 +54,18 @@ v install v_llama_cpp
 module main
 
 import os
-import v_llama_cpp
+import v_llama_cpp {
+        ModelUrl
+}
 
 fn main() {
+        model_url := 'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
         model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
-        ctx := v_llama_cpp.ez_load_model(model_path, -1, 2048, 512) or {
+        mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
                 println('load model failed.')
                 return
         }
-        defer { ctx.ez_free() }
+        defer { ctx.free() }
         input_buffer := os.input('>')
         prompt := '<｜User｜>${input_buffer}<｜Assistant｜>'
         print('deepseek:')
@@ -82,7 +85,7 @@ fn print_token(token string) {
 }
 ```
 
-你需要下载 GGUF 格式的模型文件**DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf**存放在程序所在目录下。推荐从以下来源下载模型文件：
+模型文件将自动下载到程序所在的'./DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'目录下。推荐从以下来获取模型文件：
 
 - https://modelscope.cn
 - https://huggingface.co/models

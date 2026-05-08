@@ -1,6 +1,10 @@
 module v_llama_cpp
 
+import os
+import net.http
+
 type TokenCallback = fn (token string)
+pub type ModelUrl = []string | string
 
 pub struct EzContext {
 mut:
@@ -10,6 +14,9 @@ pub mut:
 }
 
 pub fn argmax(arr []f32) int {
+	if arr.len == 0 {
+		return 1
+	}
         mut max_idx := 0
         mut max_val := arr[0]
         for i := 1; i < arr.len; i++ {
@@ -42,6 +49,22 @@ pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !EzCon
 	}
 }
 
+pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_ctx int, n_batch int) !EzContext {
+	if os.exists(model_path) {
+		return ez_load_model(model_path, gpu_layers, n_ctx, n_batch)!
+	}
+	mut file := os.create(model_path) or {
+		return error('Error: ./v_llama_cpp/ez_llama.v ez_download_model(): Failed to create file at $model_path: $err')
+	}
+	defer { file.close() }
+	if model_url is string {
+		http.download_file_with_progress(model_url, model_path) or {
+			return error('Error: ./v_llama_cpp/ez_llama.v ez_download_model(): HTTP download failed: $err')
+		}
+	}
+	return ez_load_model(model_path, gpu_layers, n_ctx, n_batch)!
+}
+
 pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, callback TokenCallback) ! {
         tokens := Tokens([]Token{cap: max_tokens})
         model := ctx.ctx.model()
@@ -71,8 +94,8 @@ pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, ca
         callback('\n')
 }
 
-pub fn (ctx EzContext) free() {
-	backend_free()
+pub fn (mut ctx EzContext) free() {
 	ctx.model.free()
 	ctx.ctx.free()
+	backend_free()
 }
