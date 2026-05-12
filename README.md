@@ -1,21 +1,23 @@
 # v_llama_cpp
 
+<div align="center">
+<img src="https://img.shields.io/github/stars/sakana-ctf/v_llama_cpp?style=flat-square&amp;logo=github&amp;color=green&amp;logoSize=14" alt="License" height="20">
+</div>
+
 English|[中文](./README_CN.md)
 
-v_llama_cpp is a V language binding for [llama.cpp](https://github.com/ggerganov/llama.cpp), allowing you to directly use llama.cpp's functionality in V language projects.
+v_llama_cpp is the V language binding for [llama.cpp](https://github.com/ggerganov/llama.cpp), allowing you to directly use llama.cpp functionality in V language projects.
 
 ## What is llama.cpp?
 
-[llama.cpp](https://github.com/ggerganov/llama.cpp) is an LLM (Large Language Model) inference framework implemented in C++, with the following key features:
+[llama.cpp](https://github.com/ggerganov/llama.cpp) is an LLM (Large Language Model) inference framework implemented in C++, with the following main features:
 
-- **Pure CPU inference**: Run large models without a GPU  
-- **Quantization support**: Supports INT4, INT5, INT8, and other quantization formats, significantly reducing memory requirements  
-- **Cross-platform**: Works on Windows, Linux, macOS, and even mobile devices  
-- **High efficiency**: Optimized for ordinary hardware, enabling operation on standard laptops  
+- **Pure CPU Inference**: Run large models without a GPU
+- **Quantization Support**: Supports INT4, INT5, INT8 and other quantization formats, significantly reducing memory requirements
+- **Cross-Platform**: Works on Windows, Linux, macOS, and even mobile devices
+- **Efficient Performance**: Optimized for ordinary hardware, runs on regular laptops
 
-In short, llama.cpp allows you to run large models like Deepseek, Qwen, and ChatGLM locally on consumer-grade hardware.
-
-Here's the English translation:
+Simply put, llama.cpp allows you to run large models like Deepseek, Qwen, ChatGLM locally on consumer-grade hardware.
 
 ## Installation
 
@@ -26,17 +28,17 @@ It is recommended to download the source code using git:
 ```bash
 # Download from Github
 git clone https://github.com/sakana-ctf/v_llama_cpp
-# For users in China, use Gitee
+# For users in China, download from Gitee
 git clone https://gitee.com/sakana_ctf/v_llama_cpp
 ```
 
-Build and detect the llama.cpp environment. If no llama.cpp environment exists, it will attempt to install it:
+Build and check the llama.cpp environment; if the llama.cpp environment does not exist, it will attempt to install it:
 
 ```bash
 v build.vsh
 ```
 
-> Note: Due to special Vlang installation paths and the need for root privileges when installing llama.cpp, it is recommended to use `sudo v build.vsh`
+> Note: In general, when vlang is in a special path or installing llama.cpp requires root privileges, it is recommended to use `sudo v build.vsh`
 
 ### Direct Installation [future]
 
@@ -50,17 +52,26 @@ v install v_llama_cpp
 
 ### Example
 
-The `./examples/` folder provides some basic examples. Below is the simplest way to call the module: `./examples/ez_simple.v`:
+Several basic examples are provided in the `./examples/` folder. Below is the simplest calling method: `./examples/ez_simple.v`:
 
 ```v
 module main
 
 import os
-import v_llama_cpp
+import v_llama_cpp {
+        ModelUrl,
+}
 
 fn main() {
+        model_url := ModelUrl{
+                url:     [
+                        'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
+                        'https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
+                ]
+                sha256: '6b01273c847100f7e594c34869670430fc3597b3897f839664ed4ba4588f5c54'
+        }
         model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
-        ctx := v_llama_cpp.ez_load_model(model_path, -1, 2048, 512) or {
+        mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
                 println('load model failed.')
                 return
         }
@@ -68,15 +79,7 @@ fn main() {
         input_buffer := os.input('>')
         prompt := '<｜User｜>${input_buffer}<｜Assistant｜>'
         print('deepseek:')
-        v_llama_cpp.ez_response(
-                ctx,
-                prompt,
-                512,
-                256,
-                print_token,
-        ) or {
-                println('response failed.')
-        }
+        v_llama_cpp.ez_response(ctx, prompt, 512, 256, print_token) or { println('response failed.') }
 }
 
 fn print_token(token string) {
@@ -84,7 +87,7 @@ fn print_token(token string) {
 }
 ```
 
-You need to download the GGUF format model file **DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf** and place it in the program's working directory. It is recommended to download the model file from the following sources:
+The model file will be automatically downloaded to the `'./DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'` directory where the program is located. It is recommended to obtain model files from the following sources:
 
 - https://huggingface.co/models
 - https://modelscope.cn

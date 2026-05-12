@@ -1,0 +1,41 @@
+name: Linux Check
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+      - '**/*.v'
+      - 'build.vsh'
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - '**/*.v'
+      - 'build.vsh'
+jobs:
+  check:
+    name: V vet & Test example
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install llama.cpp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y llama.cpp
+      
+      - name: Install V
+        run: |
+          git clone --depth=1 https://github.com/vlang/v
+          cd v
+          make
+          sudo ./v symlink
+
+      - name: Setup v_llama_cpp
+        run: v build.vsh
+
+      - name: V vet
+        run: v vet .
+
+      - name: Run tests
+        run: v run test/main.v

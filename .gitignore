@@ -1,6 +1,8 @@
 build
-examples/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf
-llama.cpp/
-*.txt
+
+# examples file.
+examples/*
+!examples/*.v
+
 
 

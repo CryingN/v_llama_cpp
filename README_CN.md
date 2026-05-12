@@ -1,5 +1,9 @@
 # v_llama_cpp
 
+<div align="center">
+<img src="https://img.shields.io/github/stars/sakana-ctf/v_llama_cpp?style=flat-square&amp;logo=github&amp;color=green&amp;logoSize=14" alt="License" height="20">
+</div>
+
 [English](README.md)|中文
 
 v_llama_cpp 是 [llama.cpp](https://github.com/ggerganov/llama.cpp) 的 V 语言绑定，让你可以在 V 语言项目中直接使用 llama.cpp 的功能。
@@ -55,11 +59,17 @@ module main
 
 import os
 import v_llama_cpp {
-        ModelUrl
+        ModelUrl,
 }
 
 fn main() {
-        model_url := 'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
+        model_url := ModelUrl{
+                url:     [
+                        'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
+                        'https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
+                ]
+                sha256: '6b01273c847100f7e594c34869670430fc3597b3897f839664ed4ba4588f5c54'
+        }
         model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
         mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
                 println('load model failed.')
@@ -69,15 +79,7 @@ fn main() {
         input_buffer := os.input('>')
         prompt := '<｜User｜>${input_buffer}<｜Assistant｜>'
         print('deepseek:')
-        v_llama_cpp.ez_response(
-                ctx,
-                prompt,
-                512,
-                256,
-                print_token,
-        ) or {
-                println('response failed.')
-        }
+        v_llama_cpp.ez_response(ctx, prompt, 512, 256, print_token) or { println('response failed.') }
 }
 
 fn print_token(token string) {
