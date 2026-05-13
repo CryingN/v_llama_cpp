@@ -24,14 +24,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libllama.cpp-dev
     
-    # 复制库文件
-    sudo cp llama_temp/libllama.so /usr/local/lib/
-    sudo cp llama_temp/libggml.so /usr/local/lib/
-    
-    # 更新库缓存
-    sudo ldconfig
-
-      
       - name: Install V
         run: |
           git clone --depth=1 https://github.com/vlang/v
