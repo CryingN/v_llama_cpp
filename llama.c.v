@@ -5,9 +5,10 @@ module v_llama_cpp
 // MacOS
 #flag darwin -I/opt/homebrew/include
 #flag darwin -L/opt/homebrew/lib
+
 // Linux
-#flag linux -I/usr/include
-#flag linux -L/usr/lib
+#flag linux -I/usr/include -I/usr/local/include
+#flag linux -L/usr/lib -L/usr/local/lib
 
 // Windows
 #flag windows -IC:/vcpkg/installed/x64-windows/include

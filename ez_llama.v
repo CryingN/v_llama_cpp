@@ -82,6 +82,7 @@ pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_c
 			}
 		}
 	}
+
 	verify_and_cleanup(model_path, model_url.sha256) or {
 		os.rm(model_path) or {
 			return error('[Error] ./v_llama_cpp/ez_llama.v ez_load_model(): Hash mismatch.')
@@ -93,7 +94,7 @@ pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_c
 // ez_response generates a response for the given prompt.
 pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, callback TokenCallback) ! {
 	tokens := Tokens([]Token{cap: max_tokens})
-	model := ctx.ctx.model()
+	model := ctx.model
 	vocab := model.vocab()
 	n_tokens := vocab.tokenize(prompt, tokens, max_tokens, true, true) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v ez_response(): Tokenization failed.')
@@ -102,8 +103,14 @@ pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, ca
 	ctx.ctx.decode(batch) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v ez_response(): Prompt processing failed.')
 	}
-	mut new_token_id := Token{}
+	ez_continue(ctx, predict, callback)!
+}
 
+// ez_continue continues token generation.
+pub fn ez_continue(ctx EzContext, predict int, callback TokenCallback) ! {
+	model := ctx.model
+	vocab := model.vocab()
+	mut new_token_id := Token{}
 	for i := 0; i < predict; i++ {
 		logits := ctx.ctx.get_logits_ith(-1, vocab)
 		new_token_id = argmax(logits)!
@@ -114,7 +121,7 @@ pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, ca
 		callback(n_chars)
 		mut new_tokens := Tokens([]Token{len: 1, cap: 1})
 		new_tokens[0] = Token(new_token_id)
-		batch = new_tokens.batch_get_one(1)
+		batch := new_tokens.batch_get_one(1)
 		ctx.ctx.decode(batch)!
 	}
 	callback('\n')
@@ -122,7 +129,7 @@ pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, ca
 
 // free releases the EzContext resources.
 pub fn (mut ctx EzContext) free() {
-	//ctx.model.free()
-	//ctx.ctx.free()
+	// ctx.model.free()
+	// ctx.ctx.free()
 	backend_free()
 }
