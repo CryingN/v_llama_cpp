@@ -35,10 +35,20 @@ git clone https://gitee.com/sakana_ctf/v_llama_cpp
 Build and check the llama.cpp environment; if the llama.cpp environment does not exist, it will attempt to install it:
 
 ```bash
-v build.vsh
+v install.vsh
 ```
 
-> Note: In general, when vlang is in a special path or installing llama.cpp requires root privileges, it is recommended to use `sudo v build.vsh`
+> Note: Installing llama.cpp with vlang may require root privileges. You can use sudo v build.vsh
+
+### Uninstall
+
+A convenient method is now provided to uninstall the current repository:
+
+```
+v unstall.vsh
+```
+
+If you had configured v_llama_cpp before updating, it will be uninstalled first and then reinstalled during the installation process.
 
 ### Direct Installation [future]
 

@@ -1,4 +1,7 @@
+# executable file generated from .vsh file
 build
+install
+uninstall
 
 # examples file.
 examples/*

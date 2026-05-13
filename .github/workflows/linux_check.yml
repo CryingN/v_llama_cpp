@@ -22,7 +22,15 @@ jobs:
       - name: Install llama.cpp
         run: |
           sudo apt-get update
-          sudo apt-get install -y llama.cpp
+          sudo apt-get install -y libllama.cpp-dev
+    
+    # 复制库文件
+    sudo cp llama_temp/libllama.so /usr/local/lib/
+    sudo cp llama_temp/libggml.so /usr/local/lib/
+    
+    # 更新库缓存
+    sudo ldconfig
+
       
       - name: Install V
         run: |
@@ -31,11 +39,14 @@ jobs:
           make
           sudo ./v symlink
 
-      - name: Setup v_llama_cpp
-        run: v build.vsh
+      - name: Install v_llama_cpp
+        run: v install.vsh
 
       - name: V vet
         run: v vet .
 
       - name: Run tests
         run: v run test/main.v
+
+      - name: Unstall v_llama_cpp
+        run: v uninstall.vsh

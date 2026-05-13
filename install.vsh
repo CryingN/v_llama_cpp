@@ -1,10 +1,16 @@
 #!/usr/bin/env v
 
 source := dir(@FILE)
-vlib_dir := '${dir(@VEXE)}/vlib'
-target := '${vlib_dir}/v_llama_cpp'
+mut vmodules_dir := home_dir() + '/.vmodules'
+$if !windows {
+	if os.getenv('SUDO_USER') != '' {
+		original_user := os.getenv('SUDO_USER')
+		vmodules_dir := '/home/${original_user}/.vmodules'
+	}
+}
+target := '${vmodules_dir}/v_llama_cpp'
 
-system('rm -rf ${target}')
+rmdir_all(target) or {}
 mkdir_all(target) or {
     println('[False] Failed to create directory: ${err}')
     return
@@ -30,20 +36,11 @@ for file in v_files {
     }
 }
 
-/*
-if system('cp -r ${source} ${target}') == 0 {
-	println('[True] v_llama_cpp copy by: ${target}v_llama_cpp')
-} else {
-        println('Copy failed!')
-        println('  Please copy the system information to the following address for future updates to support your system:')
-        println('  * https://gitee.com/sakana_ctf/v_llama_cpp/issues')
-        println('  * https://github.com/sakana-ctf/v_llama_cpp/issues')
-        println('source :       ${source}')
-        println('target :       ${target}')
-        println('cmd    :       cp -r ${source} ${target}')
-        return
+$if !windows {
+    if os.getenv('SUDO_USER') != '' {
+        system('chown -R ${original_user}:${original_user} ${vmodules_dir}')
+    }
 }
-*/
 
 $if linux {
         // arch

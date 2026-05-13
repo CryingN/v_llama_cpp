@@ -122,7 +122,7 @@ pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, ca
 
 // free releases the EzContext resources.
 pub fn (mut ctx EzContext) free() {
-	ctx.model.free()
-	ctx.ctx.free()
+	//ctx.model.free()
+	//ctx.ctx.free()
 	backend_free()
 }

@@ -35,10 +35,20 @@ git clone https://gitee.com/sakana_ctf/v_llama_cpp
 构建并检测llama.cpp环境, 如果没有llama.cpp环境将尝试进行安装:
 
 ```bash
-v build.vsh
+v install.vsh
 ```
 
-> 注意: 一般情况vlang在特殊路径或安装llama.cpp需要root权限, 建议使用`sudo v build.vsh`
+> 注意: vlang安装llama.cpp可能需要root权限, 可以使用`sudo v build.vsh`
+
+### 卸载
+
+现在提供了便捷的方式用于卸载当前仓库:
+
+```
+v unstall.vsh
+```
+
+如果在更新前配置过v_llama_cpp, 安装时先卸载后重新安装.
 
 ### 直接安装[future]
 
