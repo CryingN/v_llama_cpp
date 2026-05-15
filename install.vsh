@@ -3,9 +3,9 @@
 source := dir(@FILE)
 mut vmodules_dir := home_dir() + '/.vmodules'
 $if !windows {
-	if os.getenv('SUDO_USER') != '' {
-		original_user := os.getenv('SUDO_USER')
-		vmodules_dir := '/home/${original_user}/.vmodules'
+	if getenv('SUDO_USER') != '' {
+		original_user := getenv('SUDO_USER')
+		vmodules_dir = '/home/${original_user}/.vmodules'
 	}
 }
 target := '${vmodules_dir}/v_llama_cpp'
@@ -37,7 +37,8 @@ for file in v_files {
 }
 
 $if !windows {
-    if os.getenv('SUDO_USER') != '' {
+    if getenv('SUDO_USER') != '' {
+	original_user := getenv('SUDO_USER')
         system('chown -R ${original_user}:${original_user} ${vmodules_dir}')
     }
 }

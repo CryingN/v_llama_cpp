@@ -7,7 +7,7 @@ import v_llama_cpp {
 
 fn main() {
 	model_url := ModelUrl{
-		url:     [
+		url:    [
 			'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
 			'https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
 		]
@@ -18,20 +18,20 @@ fn main() {
 		println('load model failed.')
 		return
 	}
-        input_buffer := os.input('> ')
-        if input_buffer == 'exit' {
-                println('EXIT!')
+	input_buffer := os.input('> ')
+	if input_buffer == 'exit' {
+		println('EXIT!')
 		return
-        }
+	}
 	prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
 	print('deepseek:')
-	ctx.ez_response(prompt, 2**4, 2**4, print_token) or {
+	ctx.ez_response(prompt, 2 ** 4, 2 ** 4, print_token) or {
 		println('response failed.')
 		return
 	}
 	print('\n')
 	for os.input('Continue?(Y/n)>').trim_space() in ['yes', 'y', 'Y'] {
-		ctx.ez_continue(2**4, print_token) or { println('response failed.') }
+		ctx.ez_continue(2 ** 4, print_token) or { println('response failed.') }
 	}
 }
 
