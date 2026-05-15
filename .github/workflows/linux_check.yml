@@ -38,8 +38,8 @@ jobs:
     
       - name: Install V
         run: |
-          git clone --depth=1 https://github.com/vlang/v
-          cd v
+          git clone --depth=1 https://github.com/vlang/v /tmp/v
+          cd /tmp/v
           make
           sudo ./v symlink
 
