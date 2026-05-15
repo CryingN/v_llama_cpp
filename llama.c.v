@@ -34,6 +34,8 @@ struct C.llama_vocab {}
 
 struct C.llama_batch {}
 
+struct C.llama_memory_t {}
+
 fn C.llama_tokenize(vocab &C.llama_vocab,
 	text &char,
 	text_len int,
@@ -74,3 +76,10 @@ fn C.llama_token_to_piece(vocab &C.llama_vocab,
 	special bool) int
 
 fn C.ggml_backend_load_all()
+fn C.llama_get_memory(ctx &C.llama_context) &C.llama_memory_t
+fn C.llama_memory_clear(mem &C.llama_memory_t,
+	data bool)
+fn C.llama_memory_seq_pos_max(
+	mem &C.llama_memory_t,
+	seq_id int
+) int

@@ -4,12 +4,14 @@ on:
     paths:
       - '.github/workflows/**'
       - '**/*.v'
-      - 'build.vsh'
+      - 'install.vsh'
+      - 'uninstall.vsh'
   pull_request:
     paths:
       - '.github/workflows/**'
       - '**/*.v'
-      - 'build.vsh'
+      - 'install.vsh'
+      - 'uninstall.vsh'
 jobs:
   check:
     name: V vet & Test example
@@ -22,7 +24,17 @@ jobs:
       - name: Install llama.cpp
         run: |
           sudo apt-get update
-          sudo apt-get install -y libllama.cpp-dev
+          sudo apt-get install -y build-essential cmake git
+          git clone --depth=1 https://github.com/ggml-org/llama.cpp /tmp/llama.cpp
+          cmake -S /tmp/llama.cpp -B /tmp/llama.cpp/build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=ON \
+            -DLLAMA_BUILD_TESTS=OFF \
+            -DLLAMA_BUILD_EXAMPLES=OFF \
+            -DGGML_NATIVE=OFF
+          cmake --build /tmp/llama.cpp/build --config Release --parallel 2
+          sudo cmake --install /tmp/llama.cpp/build
+          sudo ldconfig
     
       - name: Install V
         run: |
@@ -40,5 +52,5 @@ jobs:
       - name: Run tests
         run: v run test/main.v
 
-      - name: Unstall v_llama_cpp
+      - name: Uninstall v_llama_cpp
         run: v uninstall.vsh

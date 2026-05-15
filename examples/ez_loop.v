@@ -18,20 +18,17 @@ fn main() {
 		println('load model failed.')
 		return
 	}
-        input_buffer := os.input('> ')
-        if input_buffer == 'exit' {
-                println('EXIT!')
-		return
-        }
-	prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
-	print('deepseek:')
-	ctx.ez_response(prompt, 2**4, 2**4, print_token) or {
-		println('response failed.')
-		return
-	}
-	print('\n')
-	for os.input('Continue?(Y/n)>').trim_space() in ['yes', 'y', 'Y'] {
-		ctx.ez_continue(2**4, print_token) or { println('response failed.') }
+	for {
+		input_buffer := os.input('>')
+		if input_buffer == 'quit' {
+			println('QUIT!')
+			return
+		}
+		prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
+		print('deepseek: ')
+		ctx.ez_response(prompt, 512, 512, print_token) or { println('response failed.') }
+		ctx.memory_clear(true)
+		print('\n')
 	}
 }
 

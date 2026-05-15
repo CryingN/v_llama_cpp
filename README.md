@@ -85,11 +85,10 @@ fn main() {
                 println('load model failed.')
                 return
         }
-        defer { ctx.free() }
         input_buffer := os.input('>')
-        prompt := '<｜User｜>${input_buffer}<｜Assistant｜>'
-        print('deepseek:')
-        v_llama_cpp.ez_response(ctx, prompt, 512, 256, print_token) or { println('response failed.') }
+        prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
+        print('deepseek: ')
+        ctx.ez_response(prompt, 512, 256, print_token) or { println('response failed.') }
 }
 
 fn print_token(token string) {

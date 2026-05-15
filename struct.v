@@ -9,13 +9,23 @@ import arrays {
 */
 
 // model returns the model.
-pub fn (ctx Context) model() Model {
-	return C.llama_get_model(ctx)
+pub fn (context Context) model() Model {
+	return C.llama_get_model(context)
 }
 
 // free releases the context resources.
 pub fn (context Context) free() {
 	C.llama_free(context)
+}
+
+// memory_clear clears the KV memory for this context.
+pub fn (context Context) memory_clear(data bool) {
+	C.llama_memory_clear(C.llama_get_memory(context), data)
+}
+
+// memory_seq_pos_max returns the largest position in memory for the sequence.
+pub fn (context Context) memory_seq_pos_max(seq_id int) int {
+	return C.llama_memory_seq_pos_max(C.llama_get_memory(context), seq_id)
 }
 
 // decode processes a batch of tokens.

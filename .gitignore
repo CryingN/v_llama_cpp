@@ -6,6 +6,7 @@ uninstall
 # examples file.
 examples/*
 !examples/*.v
+!examples/*.c
 
 # .vv file
 *.vv

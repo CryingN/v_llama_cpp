@@ -14,13 +14,6 @@ pub:
 	timeout int
 }
 
-pub struct EzContext {
-mut:
-	model Model
-pub mut:
-	ctx Context
-}
-
 // argmax returns the index of the maximum value in the array.
 pub fn argmax(arr []f32) !int {
 	if arr.len == 0 {
@@ -38,7 +31,7 @@ pub fn argmax(arr []f32) !int {
 }
 
 // ez_load_model loads a model from path.
-pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !EzContext {
+pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !Context {
 	backend_init()
 	mut model_params := model_default_params()
 	model_params.set_n_gpu_layers(gpu_layers)
@@ -52,14 +45,11 @@ pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !EzCon
 	mut ctx := init_from_model(model, ctx_params) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v ez_load_model(): Context loading failed.')
 	}
-	return EzContext{
-		model: model
-		ctx:   ctx
-	}
+	return ctx
 }
 
 // ez_load_model downloads and loads a model from ModelUrl.
-pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_ctx int, n_batch int) !EzContext {
+pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_ctx int, n_batch int) !Context {
 	if os.exists(model_path) {
 		return ez_load_model(model_path, gpu_layers, n_ctx, n_batch)!
 	}
@@ -92,29 +82,34 @@ pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_c
 }
 
 // ez_response generates a response for the given prompt.
-pub fn ez_response(ctx EzContext, prompt string, max_tokens int, predict int, callback TokenCallback) ! {
+pub fn (ctx Context) ez_response(prompt string, max_tokens int, predict int, callback TokenCallback) ! {
+	add_special := ctx.memory_seq_pos_max(0) == -1
 	tokens := Tokens([]Token{cap: max_tokens})
-	model := ctx.model
+	model := ctx.model()
 	vocab := model.vocab()
-	n_tokens := vocab.tokenize(prompt, tokens, max_tokens, true, true) or {
+	n_tokens := vocab.tokenize(prompt, tokens, max_tokens, add_special, true) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v ez_response(): Tokenization failed.')
 	}
 	mut batch := tokens.batch_get_one(n_tokens)
-	ctx.ctx.decode(batch) or {
+	ctx.decode(batch) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v ez_response(): Prompt processing failed.')
 	}
-	ez_continue(ctx, predict, callback)!
+	ctx.ez_continue(predict, callback)!
 }
 
 // ez_continue continues token generation.
-pub fn ez_continue(ctx EzContext, predict int, callback TokenCallback) ! {
-	model := ctx.model
+pub fn (ctx Context) ez_continue(predict int, callback TokenCallback) ! {
+	model := ctx.model()
 	vocab := model.vocab()
 	mut new_token_id := Token{}
 	for i := 0; i < predict; i++ {
-		logits := ctx.ctx.get_logits_ith(-1, vocab)
+		logits := ctx.get_logits_ith(-1, vocab)
 		new_token_id = argmax(logits)!
 		if vocab.is_eog(new_token_id) {
+			mut new_tokens := Tokens([]Token{len: 1, cap: 1})
+			new_tokens[0] = Token(new_token_id)
+			batch := new_tokens.batch_get_one(1)
+			ctx.decode(batch)!
 			break
 		}
 		n_chars := vocab.token_to_piece(new_token_id, predict, 0, true) or { '' }
@@ -122,14 +117,7 @@ pub fn ez_continue(ctx EzContext, predict int, callback TokenCallback) ! {
 		mut new_tokens := Tokens([]Token{len: 1, cap: 1})
 		new_tokens[0] = Token(new_token_id)
 		batch := new_tokens.batch_get_one(1)
-		ctx.ctx.decode(batch)!
+		ctx.decode(batch)!
 	}
-	callback('\n')
 }
 
-// free releases the EzContext resources.
-pub fn (mut ctx EzContext) free() {
-	// ctx.model.free()
-	// ctx.ctx.free()
-	backend_free()
-}
