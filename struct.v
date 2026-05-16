@@ -57,6 +57,20 @@ pub fn (model Model) free() {
 	C.llama_model_free(model)
 }
 
+// model_chat_template returns the chat template for the model.
+pub fn (model Model) model_chat_template(name ?string) !string {
+	mut tmpl := unsafe { nil }
+	if name == none {
+		tmpl = C.llama_model_chat_template(model, unsafe { nil })
+	} else {
+			tmpl = C.llama_model_chat_template(model, name.str)
+	}
+	if tmpl == unsafe { nil } {
+		return error('[Error] ./v_llama_cpp/struct.v Model.model_chat_template(): not found ${name} template.')
+	}
+	return unsafe { cstring_to_vstring(tmpl) }
+}
+
 /*
 	Tokens
 */
@@ -98,5 +112,46 @@ pub fn (vocab Vocab) token_to_piece(token_id int, length int, lstrip int, specia
 
 	return unsafe {
 		buf[0..result].bytestr()
+	}
+}
+
+/*
+	ChatMessage
+*/
+
+pub struct ChatMessage {
+pub:
+	role    string
+	content string
+}
+
+// chat_apply_template applies a chat template to chat messages.
+pub fn (chat_messages []ChatMessage) chat_apply_template(tmpl string, add_ass bool) !string {
+	if chat_messages.len == 0 {
+		return error('[Error] ./v_llama_cpp/struct.v []ChatMessage.chat_apply_template(): messages is empty.')
+	}
+	mut llama_chat_messages := []C.llama_chat_message{len: chat_messages.len}
+	for i, chat_message in chat_messages {
+		llama_chat_messages[i] = C.llama_chat_message{
+			role:    chat_message.role.str
+			content: chat_message.content.str
+		}
+	}
+	prompt_len := C.llama_chat_apply_template(tmpl.str, llama_chat_messages.data, chat_messages.len,
+		add_ass, unsafe { nil }, 0)
+	if prompt_len < 0 {
+		return error('[Error] ./v_llama_cpp/struct.v []ChatMessage.chat_apply_template(): chat template length calculation failed.')
+	}
+	mut prompt := []u8{len: prompt_len + 1}
+	written := C.llama_chat_apply_template(tmpl.str, llama_chat_messages.data, chat_messages.len,
+		add_ass, prompt.data, prompt.len)
+	if written < 0 {
+		return error('[Error] ./v_llama_cpp/struct.v []ChatMessage.chat_apply_template(): render failed.')
+	}
+	if written > prompt_len {
+		return error('[Error] ./v_llama_cpp/struct.v []ChatMessage.chat_apply_template(): prompt buffer is too small.')
+	}
+	return unsafe {
+		prompt[0..written].bytestr()
 	}
 }

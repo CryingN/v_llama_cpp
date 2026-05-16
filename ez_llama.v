@@ -121,3 +121,8 @@ pub fn (ctx Context) ez_continue(predict int, callback TokenCallback) ! {
 	}
 }
 
+// ez_chat_template applies the model's default chat template to messages.
+pub fn (context Context) ez_chat_template(messages []ChatMessage) !string {
+	tmpl := context.model().model_chat_template(none)!
+	return messages.chat_apply_template(tmpl, true)!
+}

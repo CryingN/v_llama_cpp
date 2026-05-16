@@ -12,4 +12,3 @@ pub type ContextParams = C.llama_context_params
 pub type Batch = C.llama_batch
 pub type MemoryT = C.llama_memory_t
 
-
