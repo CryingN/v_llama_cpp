@@ -1,6 +1,8 @@
 module v_llama_cpp
 
-#flag -lllama -lggml -lggml-base
+#flag -lllama -lggml -lggml-base -lggml-cpu
+#flag -I @VMODROOT/build/include
+#flag -L @VMODROOT/build/lib
 
 // MacOS
 #flag darwin -I/opt/homebrew/include
@@ -9,10 +11,6 @@ module v_llama_cpp
 // Linux
 #flag linux -I/usr/include -I/usr/local/include
 #flag linux -L/usr/lib -L/usr/local/lib
-
-// Windows
-#flag windows -IC:/vcpkg/installed/x64-windows/include
-#flag windows -LC:/vcpkg/installed/x64-windows/lib
 
 #include "llama.h"
 

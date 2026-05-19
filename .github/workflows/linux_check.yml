@@ -44,7 +44,7 @@ jobs:
           sudo ./v symlink
 
       - name: Install v_llama_cpp
-        run: v install.vsh
+        run: printf "1\n" | v install.vsh
 
       - name: V vet
         run: v vet .

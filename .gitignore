@@ -1,5 +1,6 @@
 # executable file generated from .vsh file
-build
+build/*
+!build/README.md
 install
 uninstall
 
@@ -10,4 +11,8 @@ examples/*
 
 # .vv file
 *.vv
+
+# vibe file
+.agents
+.codex
 
