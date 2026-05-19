@@ -26,6 +26,6 @@ fn main() {
 			content:	input_buffer
 		},
 	]
-	messages := ctx.ez_chat_template(chat_messages, true) or { panic(err) }
+	messages := ctx.ez_chat_template(chat_messages) or { panic(err) }
 	println(messages)
 }
