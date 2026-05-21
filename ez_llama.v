@@ -32,6 +32,7 @@ pub fn argmax(arr []f32) !int {
 
 // ez_load_model loads a model from path.
 pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !Context {
+	ggml_backend_load_all()
 	mut model_params := model_default_params()
 	model_params.set_n_gpu_layers(gpu_layers)
 	mut ctx_params := context_default_params()
