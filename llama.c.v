@@ -3,6 +3,7 @@ module v_llama_cpp
 #flag -lllama -lggml -lggml-base -lggml-cpu
 #flag -I @VMODROOT/build/include
 #flag -L @VMODROOT/build/lib
+#flag -I @VMODROOT/c_src
 
 // MacOS
 #flag darwin -I/opt/homebrew/include
@@ -12,7 +13,7 @@ module v_llama_cpp
 #flag linux -I/usr/include -I/usr/local/include
 #flag linux -L/usr/lib -L/usr/local/lib
 
-#include "llama.h"
+#include "v_llama_cpp.h"
 
 struct C.llama_model_params {
 mut:

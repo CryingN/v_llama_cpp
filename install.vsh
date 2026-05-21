@@ -7,6 +7,7 @@ fn error_msg(msg string) {
 	println('  * https://github.com/sakana-ctf/v_llama_cpp/issues')
 	system('v doctor')
 	println(msg)
+	exit(0)
 }
 
 fn choice_type() string {
@@ -40,7 +41,11 @@ for file in old_files {
                 rm(join_path(target, file)) or {
                         println('[Warn] Failed to remove old ${file}: ${err}')
                 }
-        }
+        } else if file == 'c_src' {
+                rmdir_all(join_path(target, file)) or {
+                        println('[Warn] Failed to remove old ${file}: ${err}')
+                }
+	}
   }
 
 mkdir_all(target) or {}
@@ -54,10 +59,13 @@ v_files := ls(source) or {
 }
 
 for file in v_files {
+	src_path := join_path(source, file)
+	dst_path := join_path(target, file)
 	if file.ends_with('.v') || file.ends_with('v.mod') {
-		src_path := join_path(source, file)
-		dst_path := join_path(target, file)
 		cp(src_path, dst_path) or { error_msg('Failed to copy ${file}: ${err}') }
+	} else if file == 'c_src' {
+		mkdir(dst_path) or {}
+		cp_all(src_path, dst_path, true) or { error_msg('Failed to copy ${file}: ${err}') }
 	}
 }
 
@@ -156,11 +164,11 @@ $if linux {
 
 $if windows {
 	// Windows
-	if system('where winget') == 0 {
-		if system('where git') != 0 {
+	if system('winget --help') == 0 {
+		if system('git --help') != 0 {
 			system('winget install -e --id Git.Git')
 		}
-		if system('where cmake') != 0 {
+		if system('cmake --help') != 0 {
 			system('winget install -e --id Kitware.CMake')
 		}
 	}
