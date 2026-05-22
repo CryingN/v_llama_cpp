@@ -224,6 +224,11 @@ if system('cmake -S "${llama_src}" -B "${llama_build}" ${cmake_flags}') != 0 {
         return
   }
 
+if system('cmake --build "${llama_build}" --config Release --parallel') != 0 {
+	error_msg('Build llama.cpp failed.')
+        return
+}
+
 if system('cmake --install "${llama_build}" --config Release --prefix ${build_path}') != 0 {
 	error_msg('Install llama.cpp libraries failed.')
         return
