@@ -21,7 +21,7 @@ fn generate_response(ctx Context, prompt string) ! {
 	ctx.decode(batch) or {
 		return error('[错误] 提示词处理失败: ${err}')
 	}
-	print('deepseek: ')
+	print('gemma: ')
 	n_predict := 256
 	mut new_token_id := Token{}
 
@@ -45,7 +45,7 @@ fn generate_response(ctx Context, prompt string) ! {
 
 fn main() {
 	v_llama_cpp.backend_init()
-	model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
+	model_path := './google_gemma-3-1b-it-Q4_0.gguf'
 	println('正在加载模型: ${model_path} ...')
 
 	mut model_params := v_llama_cpp.model_default_params()
@@ -67,7 +67,7 @@ fn main() {
 			println('EXIT!')
 			exit(1)
 		}
-		prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
+		prompt := '<start_of_turn>user\n${input_buffer}<end_of_turn>\n<start_of_turn>model\n'
 		generate_response(ctx, prompt) or { panic(err) }
 	}
 }

@@ -8,12 +8,12 @@ import v_llama_cpp {
 fn main() {
 	model_url := ModelUrl{
 		url:    [
-			'https://www.modelscope.cn/models/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/master/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
-			'https://huggingface.co/unsloth/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf',
+			'https://www.modelscope.cn/models/bartowski/google_gemma-3-1b-it-GGUF/resolve/master/google_gemma-3-1b-it-Q4_0.gguf',
+			'//https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_0.gguf',
 		]
-		sha256: '6b01273c847100f7e594c34869670430fc3597b3897f839664ed4ba4588f5c54'
+		sha256: '4c62ce8950bc6d5ba5124a70fc13ece971fabd4dc5705477f305a6c3eb6294cd'
 	}
-	model_path := './DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf'
+	model_path := './google_gemma-3-1b-it-Q4_0.gguf'
 	mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
 		println('load model failed.')
 		return
@@ -23,8 +23,8 @@ fn main() {
 		println('EXIT!')
 		return
 	}
-	prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
-	print('deepseek:')
+	prompt := '<start_of_turn>user\n${input_buffer}<end_of_turn>\n<start_of_turn>model\n'
+	print('gemma: ')
 	ctx.ez_response(prompt, 2 ** 4, 2 ** 4, print_token) or {
 		println('response failed.')
 		return

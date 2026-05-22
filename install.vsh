@@ -201,11 +201,12 @@ if exists(llama_h_path) {
 mut cmake_flags := '-DCMAKE_BUILD_TYPE=Release'
 choice := choice_type()
 match choice {
+	'1' { cmake_flags += ' -DGGML_VULKAN=OFF' }
 	'2' { cmake_flags += ' -DGGML_VULKAN=ON' }
 	'3' { cmake_flags += ' -DGGML_CUDA=ON' }
 	'4' { cmake_flags += ' -DGGML_HIP=ON' }
 	'5' { cmake_flags += ' -DGGML_METAL=ON' }
-	else { }
+	else { cmake_flags += ' -DGGML_VULKAN=OFF' }
 }
 
 cmake_flags += ' -DBUILD_SHARED_LIBS=ON'
@@ -217,11 +218,16 @@ cmake_flags += ' -DLLAMA_BUILD_SERVER=OFF'
 cmake_flags += ' -DGGML_BUILD_EXAMPLES=OFF'
 cmake_flags += ' -DGGML_BUILD_TESTS=OFF'
 
-
+rmdir_all(llama_build) or {}
 if system('cmake -S "${llama_src}" -B "${llama_build}" ${cmake_flags}') != 0 {
         error_msg('CMake configure llama.cpp failed.')
         return
   }
+
+if system('cmake --build "${llama_build}" --config Release --parallel') != 0 {
+	error_msg('Build llama.cpp failed.')
+        return
+}
 
 if system('cmake --install "${llama_build}" --config Release --prefix ${build_path}') != 0 {
 	error_msg('Install llama.cpp libraries failed.')

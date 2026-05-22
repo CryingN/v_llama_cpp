@@ -2,6 +2,7 @@ module v_llama_cpp
 
 // backend_init initializes the llama.cpp backend.
 pub fn backend_init() {
+	C.llama_log_set(C.v_llama_log_silent, unsafe{ nil });
 	C.ggml_backend_load_all()
 	C.llama_backend_init()
 }

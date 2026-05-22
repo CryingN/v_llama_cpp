@@ -9,6 +9,10 @@ examples/*
 !examples/*.v
 !examples/*.c
 
+# test
+test/*
+!test/*.v
+
 # .vv file
 *.vv
 
