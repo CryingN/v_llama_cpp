@@ -218,7 +218,7 @@ cmake_flags += ' -DLLAMA_BUILD_SERVER=OFF'
 cmake_flags += ' -DGGML_BUILD_EXAMPLES=OFF'
 cmake_flags += ' -DGGML_BUILD_TESTS=OFF'
 
-
+rmdir_all(llama_build) or {}
 if system('cmake -S "${llama_src}" -B "${llama_build}" ${cmake_flags}') != 0 {
         error_msg('CMake configure llama.cpp failed.')
         return
