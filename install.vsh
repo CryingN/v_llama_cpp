@@ -201,11 +201,12 @@ if exists(llama_h_path) {
 mut cmake_flags := '-DCMAKE_BUILD_TYPE=Release'
 choice := choice_type()
 match choice {
+	'1' { cmake_flags += ' -DGGML_VULKAN=OFF' }
 	'2' { cmake_flags += ' -DGGML_VULKAN=ON' }
 	'3' { cmake_flags += ' -DGGML_CUDA=ON' }
 	'4' { cmake_flags += ' -DGGML_HIP=ON' }
 	'5' { cmake_flags += ' -DGGML_METAL=ON' }
-	else { }
+	else { cmake_flags += ' -DGGML_VULKAN=OFF' }
 }
 
 cmake_flags += ' -DBUILD_SHARED_LIBS=ON'

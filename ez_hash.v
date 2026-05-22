@@ -4,6 +4,9 @@ import os
 import crypto.sha256
 
 fn verify_and_cleanup(model_path string, expected_hash string) ! {
+	if expected_hash == '' {
+		return
+	}
 	mut h := sha256.new()
 	mut f := os.open(model_path) or { return err }
 	defer { f.close() }

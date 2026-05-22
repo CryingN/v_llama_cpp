@@ -73,9 +73,12 @@ pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_c
 		}
 	}
 
-	verify_and_cleanup(model_path, model_url.sha256) or {
-		os.rm(model_path) or {
-			return error('[Error] ./v_llama_cpp/ez_llama.v ez_load_model(): Hash mismatch.')
+	defer {
+		verify_and_cleanup(model_path, model_url.sha256) or {
+			os.rm(model_path) or {
+				println('[Error] ./v_llama_cpp/ez_llama.v ez_load_model(): Hash mismatch.')
+				exit(0)
+			}
 		}
 	}
 	return ez_load_model(model_path, gpu_layers, n_ctx, n_batch)!

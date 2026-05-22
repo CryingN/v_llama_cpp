@@ -4,6 +4,7 @@ module v_llama_cpp
 #flag -I @VMODROOT/build/include
 #flag -L @VMODROOT/build/lib
 #flag -I @VMODROOT/c_src
+#flag @VMODROOT/c_src/v_llama_cpp.c
 
 // MacOS
 #flag darwin -I/opt/homebrew/include
@@ -90,3 +91,5 @@ fn C.llama_chat_apply_template(tmpl &char,
 	add_ass bool,
 	buf &char,
 	length int) int
+fn C.llama_log_set(callback voidptr, user_data voidptr)
+fn C.v_llama_log_silent(level int, text &char, user_data voidptr)

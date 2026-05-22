@@ -39,7 +39,7 @@ void generate_response(struct llama_context *ctx, const char *prompt) {
                 return;
         }
 
-        printf("deepseek: ");
+        printf("gemma: ");
         int n_predict = 256;
         llama_token new_token_id;
 
@@ -74,7 +74,7 @@ int main() {
         struct llama_model_params model_params = llama_model_default_params();
         model_params.n_gpu_layers = 0;
 
-        const char *model_path = "./DeepSeek-R1-Distill-Qwen-1.5B-Q2_K.gguf";
+        const char *model_path = "./google_gemma-3-1b-it-Q4_0.gguf";
         printf("正在加载模型: %s ...\n", model_path);
 
         struct llama_model *model = llama_load_model_from_file(model_path, model_params);
@@ -118,7 +118,7 @@ int main() {
                 snprintf(
                         prompt, 
                         sizeof(prompt),
-                        "<｜User｜>%s<｜Assistant｜><think>\n",
+                        "<start_of_turn>user\n%s<end_of_turn>\n<start_of_turn>model\n",
                         input_buffer
                 );
                 generate_response(ctx, prompt);
