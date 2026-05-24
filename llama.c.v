@@ -64,10 +64,10 @@ fn C.llama_init_from_model(model &C.llama_model,
 	ctx_params C.llama_context_params) &C.llama_context
 fn C.llama_batch_get_one(tokens &i32,
 	n_tokens int) C.llama_batch
-fn C.llama_decode(context C.llama_context,
-	batch C.llama_batch) bool
-fn C.llama_vocab_n_tokens(vocab C.llama_vocab) int
-fn C.llama_get_logits_ith(context C.llama_context,
+fn C.llama_decode(context &C.llama_context,
+	batch C.llama_batch) int
+fn C.llama_vocab_n_tokens(vocab &C.llama_vocab) int
+fn C.llama_get_logits_ith(context &C.llama_context,
 	last_pos int) &f32
 fn C.llama_vocab_is_eog(vocab &C.llama_vocab,
 	token int) bool

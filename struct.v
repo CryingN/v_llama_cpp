@@ -31,7 +31,7 @@ pub fn (context Context) memory_seq_pos_max(seq_id int) int {
 // decode processes a batch of tokens.
 pub fn (context Context) decode(batch Batch) ! {
 	result := C.llama_decode(context, batch)
-	if result {
+	if result != 0 {
 		return error('[Error] ./v_llama_cpp/struct.v Context.decode(): Prompt processing failed.')
 	}
 }
