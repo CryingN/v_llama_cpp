@@ -1,4 +1,4 @@
-//gcc llama_cpp_run.c -o llama_cpp_run -lllama
+//gcc llama_cpp_run.c -o llama_cpp_run -lllama -lggml -lggml-base
 
 #include <llama.h>
 #include <stdio.h>
@@ -72,12 +72,12 @@ int main() {
 	
 	// 1. 构建模型
         struct llama_model_params model_params = llama_model_default_params();
-        model_params.n_gpu_layers = 0;
+        model_params.n_gpu_layers = -1;
 
         const char *model_path = "./google_gemma-3-1b-it-Q4_0.gguf";
         printf("正在加载模型: %s ...\n", model_path);
 
-        struct llama_model *model = llama_load_model_from_file(model_path, model_params);
+        struct llama_model *model = llama_model_load_from_file(model_path, model_params);
 
         if (model == NULL) {
                 printf("模型加载失败\n");

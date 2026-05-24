@@ -146,7 +146,7 @@ $if linux {
 		mut to_install := []string{}
 
 		for pkg in packages {
-			check := system('dpkg -s $pkg | grep -q "Status: install ok installed"')
+			check := system('dpkg -s ${pkg} >/dev/null 2>&1')
 			if check != 0 {
 				to_install << pkg
 			} else {
