@@ -77,7 +77,7 @@ int main() {
         const char *model_path = "./google_gemma-3-1b-it-Q4_0.gguf";
         printf("正在加载模型: %s ...\n", model_path);
 
-        struct llama_model *model = llama_model_load_from_file(model_path, model_params);
+        struct llama_model *model = llama_load_model_from_file(model_path, model_params);
 
         if (model == NULL) {
                 printf("模型加载失败\n");

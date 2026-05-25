@@ -43,6 +43,23 @@ pub fn (context Context) get_logits_ith(last_pos int, vocab Vocab) []f32 {
 	return unsafe { carray_to_varray[f32](logits_ptr, n_vocab) }
 }
 
+// state_save_file saves the current model state to the specified file path.
+pub fn (context Context) state_save_file(path string) ! {
+	result := C.llama_state_save_file(context, path.str, unsafe { nil }, 0)
+	if result == 0 {
+		return error('[Error] ./v_llama_cpp/struct.v Context.state_save_file(): failed to save model state.')
+	}
+}
+
+// state_load_file loads the model state from the specified file path.
+pub fn (context Context) state_load_file(path string) ! {
+	mut n_token_count := usize(0)
+	result := C.llama_state_load_file(context, path.str, unsafe { nil }, 0, &n_token_count)
+	if result == 0 {
+		return error('[Error] ./v_llama_cpp/struct.v Context.state_load_file(): failed to load model state.')
+	}
+}
+
 /*
 	Model
 */

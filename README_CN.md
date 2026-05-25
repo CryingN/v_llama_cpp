@@ -89,6 +89,7 @@ fn main() {
         prompt := '<start_of_turn>user\n${input_buffer}<end_of_turn>\n<start_of_turn>model\n'
         print('gemma: ')
         ctx.ez_response(prompt, 512, 256, print_token) or { println('response failed.') }
+        print('\n')
 }
 
 fn print_token(token string) {
