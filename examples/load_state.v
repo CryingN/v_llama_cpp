@@ -7,21 +7,24 @@ import v_llama_cpp {
 
 fn main() {
 	model_url := ModelUrl{
-		url:     [
+		url:    [
 			'https://www.modelscope.cn/models/bartowski/google_gemma-3-1b-it-GGUF/resolve/master/google_gemma-3-1b-it-Q4_0.gguf',
 			'https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_0.gguf',
 		]
 		sha256: '4c62ce8950bc6d5ba5124a70fc13ece971fabd4dc5705477f305a6c3eb6294cd'
 	}
 	model_path := './google_gemma-3-1b-it-Q4_0.gguf'
+	state_path := './chat_state.bin'
 	mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
 		println('load model failed.')
 		return
 	}
+	ctx.state_load_file(state_path) or { println('cache not found') }
 	input_buffer := os.input('>')
 	prompt := '<start_of_turn>user\n${input_buffer}<end_of_turn>\n<start_of_turn>model\n'
 	print('gemma: ')
 	ctx.ez_response(prompt, 512, 256, print_token) or { println('response failed.') }
+	ctx.state_save_file(state_path) or { println('failed to save model state') }
 	print('\n')
 }
 

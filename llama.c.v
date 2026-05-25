@@ -93,3 +93,12 @@ fn C.llama_chat_apply_template(tmpl &char,
 	length int) int
 fn C.llama_log_set(callback voidptr, user_data voidptr)
 fn C.v_llama_log_silent(level int, text &char, user_data voidptr)
+fn C.llama_state_save_file(ctx &C.llama_context,
+	path_session &u8,
+	tokens &i32,
+	n_token_count usize) u64
+fn C.llama_state_load_file(ctx &C.llama_context,
+	path_session &u8,
+	tokens_out &i32,
+	n_token_capacity usize,
+	n_token_count_out &usize) u64
