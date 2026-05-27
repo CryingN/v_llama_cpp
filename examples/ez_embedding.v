@@ -2,13 +2,12 @@ module main
 
 import os
 import v_llama_cpp {
-	ChatMessage,
 	ModelUrl,
 }
 
 fn main() {
 	model_url := ModelUrl{
-		url:    [
+		url:     [
 			'https://www.modelscope.cn/models/bartowski/google_gemma-3-1b-it-GGUF/resolve/master/google_gemma-3-1b-it-Q4_0.gguf',
 			'https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_0.gguf',
 		]
@@ -19,21 +18,11 @@ fn main() {
 		println('load model failed.')
 		return
 	}
+
 	input_buffer := os.input('>')
-	chat_messages := [
-		ChatMessage{
-			role:    '测试员'
-			content: '123'
-		},
-		ChatMessage{
-			role:    'model'
-			content: input_buffer
-		},
-		ChatMessage{
-			role:    '测试员'
-			content: '哈哈'
-		},
-	]
-	messages := ctx.ez_chat_template(chat_messages) or { panic(err) }
-	println(messages)
+	embedding := ctx.get_embeddings(input_buffer, true) or {
+		println(err)
+		return
+	}
+	println(embedding)
 }
