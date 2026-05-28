@@ -3,8 +3,10 @@ module v_llama_cpp
 #flag -lllama -lggml -lggml-base
 #flag -I @VMODROOT/build/include
 #flag -L @VMODROOT/build/lib
+#flag -L @VMODROOT/build/lib
 #flag -I @VMODROOT/c_src
 #flag @VMODROOT/c_src/v_llama_cpp.c
+#flag -Wl,rpath="@VMODROOT/build/bin"
 
 // MacOS
 #flag darwin -I/opt/homebrew/include

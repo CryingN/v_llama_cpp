@@ -5,6 +5,7 @@
 
 void v_llama_log_silent(enum ggml_log_level level, const char * text, void *
 user_data);
+void dll_search_path(const char* path);
 
 #endif
 

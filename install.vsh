@@ -21,7 +21,7 @@ fn choice_type() string {
 }
 
 source := dir(@FILE)
-mut vmodules_dir := home_dir() + '/.vmodules'
+mut vmodules_dir := join_path(home_dir(), '.vmodules')
 $if !windows {
 	if getenv('SUDO_USER') != '' {
 		original_user := getenv('SUDO_USER')
@@ -29,11 +29,12 @@ $if !windows {
 	}
 }
 
-target := '${vmodules_dir}/v_llama_cpp'
+target := join_path(vmodules_dir, 'v_llama_cpp')
 build_path := join_path(target, 'build')
 llama_h_path := join_path(build_path, 'include', 'llama.h')
 llama_src := join_path(build_path, 'llama.cpp')
 llama_build := join_path(llama_src, 'build')
+llama_bin := join_path(build_path, 'bin').replace('/', '\\')
 
 old_files := ls(target) or { []string{} }
 for file in old_files {
@@ -188,7 +189,8 @@ $if macos {
 	}
 }
 
-if !exists(llama_src) {
+if !exists(llama_src) || !exists(join_path(llama_src), 'Makefile') {
+	rmdir_all(llama_src) or {}
 	if system('git clone https://github.com/ggml-org/llama.cpp "${llama_src}"') != 0 {
 	error_msg('Clone llama.cpp failed.')
 	}
@@ -211,6 +213,7 @@ match choice {
 
 cmake_flags += ' -DBUILD_SHARED_LIBS=ON'
 cmake_flags += ' -DLLAMA_BUILD_COMMON=OFF'
+cmake_flags += ' -DLLAMA_BUILD_APP=OFF'
 cmake_flags += ' -DLLAMA_BUILD_TOOLS=OFF'
 cmake_flags += ' -DLLAMA_BUILD_EXAMPLES=OFF'
 cmake_flags += ' -DLLAMA_BUILD_TESTS=OFF'
@@ -234,9 +237,9 @@ if system('cmake --install "${llama_build}" --config Release --prefix ${build_pa
         return
 }
 
-$if linux {
-	system('sudo ldconfig')
+$if windows {
+	cmd := '.\\path.bat ${llama_bin}'
+	system(cmd)
 }
-
 
 
