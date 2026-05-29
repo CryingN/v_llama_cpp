@@ -189,7 +189,7 @@ $if macos {
 	}
 }
 
-if !exists(llama_src) || !exists(join_path(llama_src), 'Makefile') {
+if !exists(llama_src) || !exists(join_path(llama_src, 'Makefile')) {
 	rmdir_all(llama_src) or {}
 	if system('git clone https://github.com/ggml-org/llama.cpp "${llama_src}"') != 0 {
 	error_msg('Clone llama.cpp failed.')
