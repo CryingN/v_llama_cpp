@@ -1,6 +1,6 @@
 module v_llama_cpp
 
-#flag -lllama -lggml -lggml-base 
+#flag -lllama -lggml -lggml-base
 #flag -I @VMODROOT/build/include
 #flag -L @VMODROOT/build/lib
 #flag -I @VMODROOT/c_src
@@ -14,10 +14,6 @@ module v_llama_cpp
 // Linux
 #flag linux -I/usr/include -I/usr/local/include
 #flag linux -L/usr/lib -L/usr/local/lib
-#flag linux -lggml-cpu
-
-// Windows
-#flag windows -lggml-cpu
 
 #include "v_llama_cpp.h"
 
@@ -29,9 +25,9 @@ mut:
 struct C.llama_model {}
 
 struct C.llama_context_params {
-	n_ctx   u32
-	n_batch u32
-	embeddings	bool
+	n_ctx      u32
+	n_batch    u32
+	embeddings bool
 }
 
 struct C.llama_context {}
@@ -99,12 +95,10 @@ fn C.llama_chat_apply_template(tmpl &char,
 	length int) int
 fn C.llama_log_set(callback voidptr, user_data voidptr)
 fn C.v_llama_log_silent(level int, text &char, user_data voidptr)
-fn C.v_llama_rag_similarity(
-	query &f32,
+fn C.v_llama_rag_similarity(query &f32,
 	docs &f32,
 	dim int,
-	n_docs int,
-) &f32
+	n_docs int) &f32
 fn C.llama_state_save_file(ctx &C.llama_context,
 	path_session &u8,
 	tokens &i32,
@@ -120,7 +114,3 @@ fn C.llama_get_embeddings(ctx &C.llama_context) &f32
 fn C.llama_get_seq_id(ctx &C.llama_context, seq_id int)
 fn C.llama_n_ctx(ctx &C.llama_context) u32
 fn C.llama_n_batch(ctx &C.llama_context) u32
-
-
-
-

@@ -9,6 +9,9 @@ examples/*
 !examples/*.v
 !examples/*.c
 
+# c_src file.
+c_src/ggml/*
+
 # test
 test/*
 !test/*.v

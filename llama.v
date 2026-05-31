@@ -59,6 +59,7 @@ pub fn get_embeddings(context Context, model Model) ![]f32 {
 	return result
 }
 
+// rag_similarity computes cosine similarity between a query and multiple documents.
 pub fn rag_similarity(query []f32, docs [][]f32) ![]f32 {
 	if docs.len == 0 {
 		return []f32{}

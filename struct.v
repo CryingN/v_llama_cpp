@@ -73,10 +73,12 @@ pub fn (context Context) get_seq_id(seq_id int) {
 	C.llama_get_seq_id(context, seq_id)
 }
 
+// n_ctx returns the context size.
 pub fn (context Context) n_ctx() u32 {
 	return C.llama_n_ctx(context)
 }
 
+// n_batch returns the batch size.
 pub fn (context Context) n_batch() u32 {
 	return C.llama_n_batch(context)
 }
