@@ -58,3 +58,25 @@ pub fn get_embeddings(context Context, model Model) ![]f32 {
 	result := unsafe { carray_to_varray[f32](embedding_ptr, n_embd) }
 	return result
 }
+
+pub fn rag_similarity(query []f32, docs [][]f32) ![]f32 {
+	if docs.len == 0 {
+		return []f32{}
+	}
+	dim := query.len
+	n_docs := docs.len
+	mut flat_docs := []f32{len: dim * n_docs}
+	for i in 0..n_docs {
+		for j in 0..dim {
+			flat_docs[i * dim + j] = docs[i][j]
+		}
+	}
+	scores_ptr := C.v_llama_rag_similarity(unsafe{ &query[0] }, unsafe{ &flat_docs[0] }, dim, n_docs)
+	if scores_ptr == unsafe { nil } {
+		return error('[Error] ./v_llama_cpp/llama.v rag_similarity():rag distance calculation failed..')
+	}
+	return unsafe { carray_to_varray[f32](scores_ptr, n_docs) }
+}
+
+
+

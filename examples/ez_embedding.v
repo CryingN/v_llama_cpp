@@ -20,7 +20,7 @@ fn main() {
 	}
 
 	input_buffer := os.input('>')
-	embedding := ctx.get_embeddings(input_buffer, true) or {
+	embedding := ctx.get_embeddings(input_buffer) or {
 		println(err)
 		return
 	}

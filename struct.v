@@ -13,8 +13,8 @@ pub fn (context Context) model() Model {
 	return C.llama_get_model(context)
 }
 
-// free releases the context resources.
-pub fn (context Context) free() {
+// ez_free releases the context resources.
+pub fn (context Context) ez_free() {
 	C.llama_free(context)
 }
 
@@ -73,6 +73,14 @@ pub fn (context Context) get_seq_id(seq_id int) {
 	C.llama_get_seq_id(context, seq_id)
 }
 
+pub fn (context Context) n_ctx() u32 {
+	return C.llama_n_ctx(context)
+}
+
+pub fn (context Context) n_batch() u32 {
+	return C.llama_n_batch(context)
+}
+
 /*
 	Model
 */
@@ -82,8 +90,8 @@ pub fn (model Model) vocab() Vocab {
 	return C.llama_model_get_vocab(model)
 }
 
-// free releases the model resources.
-pub fn (model Model) free() {
+// ez_free releases the model resources.
+pub fn (model Model) ez_free() {
 	C.llama_model_free(model)
 }
 
