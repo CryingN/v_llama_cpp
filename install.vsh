@@ -177,15 +177,27 @@ $if windows {
 
 $if macos {
 	// mac
-	if system('which brew') == 0 {
-		check := system('brew list --formula | grep -q llama.cpp')
-		if check == 0 {
-			println('llama.cpp already installed via Homebrew, skipping')
+	if os.system('which brew') == 0 {
+		if os.system('brew list cmake >/dev/null 2>&1') != 0 {
+		        println('  -> cmake not found, installing...')
+		        os.system('brew install cmake')
 		} else {
-			println('Detected Homebrew, installing llama.cpp...')
-			system('brew install llama.cpp')
+		        println('  -> cmake is already installed.')
 		}
-		return
+		if os.system('brew list git >/dev/null 2>&1') != 0 {
+		        println('  -> git not found, installing...')
+		        os.system('brew install git')
+		} else {
+		        println('  -> git is already installed.')
+		}
+		if os.system('brew list libomp >/dev/null 2>&1') != 0 {
+		        println('  -> libomp not found, installing OpenMP support...')
+		        os.system('brew install libomp')
+		} else {
+		        println('  -> libomp is already installed.')
+		}
+	} else {
+	        error_msg('Homebrew is required on macOS to fetch build dependencies. Please install it first.')
 	}
 }
 
