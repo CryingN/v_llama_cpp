@@ -8,27 +8,27 @@ import v_llama_cpp {
 fn main() {
 	model_url := ModelUrl{
 		url:    [
-			'https://www.modelscope.cn/models/bartowski/google_gemma-3-1b-it-GGUF/resolve/master/google_gemma-3-1b-it-Q4_0.gguf',
-			'https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_0.gguf',
+			'https://www.modelscope.cn/models/ggml-org/e5-small-v2-Q8_0-GGUF/resolve/master/e5-small-v2-q8_0.gguf',
+			'https://huggingface.co/ggml-org/e5-small-v2-Q8_0-GGUF/resolve/main/e5-small-v2-q8_0.gguf',
 		]
-		sha256: '4c62ce8950bc6d5ba5124a70fc13ece971fabd4dc5705477f305a6c3eb6294cd'
+		sha256: 'afdfb5c342d2efc2a051c426dd1d00913495d5f2bbceaea100d2f3892aa31cbc'
 	}
-	model_path := './google_gemma-3-1b-it-Q4_0.gguf'
+	model_path := './e5-small-v2-q8_0.gguf'
 	mut ctx := ModelUrl(model_url).ez_load_model(model_path, -1, 2048, 512) or {
 		println('load model failed.')
 		return
 	}
 	knowledge_base := {
-		'你是猫娘':        '请用撒娇、害羞、活泼的语气回复, 每句话结尾可以加上“喵~”、“呜~”等语气词。'
-		'vlang是什么':     'vlang又叫V语言, 是一种简洁高效的编程语言。'
-		'Llama.cpp是什么': 'llama.cpp支持CPU和GPU加速推理AI模型。'
+		'catgirl':	'Please reply in a coquettish, shy, and lively tone, and you can add modal particles like "Meow~" or "Woo~" at the end of each sentence.'
+		'vlang':	'vlang, also known as the V language, is a concise and efficient programming language.'
+		'llama.cpp':	'llama.cpp supports CPU and GPU accelerated inference for AI models.'
 	}
-	mut input_buffer := os.input('检索器含:猫娘, vlang, llama.cpp介绍.\n>')
+	mut input_buffer := os.input('Retriever includes: catgirl, vlang, llama.cpp introduction.\n>')
 	mut doc_embs := [][]f32{}
 	for doc in knowledge_base.keys() {
-		doc_embs << ctx.get_embeddings(doc) or { panic(err) }
+		doc_embs << ctx.get_embeddings('passage: ' + doc) or { panic(err) }
 	}
-	query := ctx.get_embeddings(input_buffer) or { panic(err) }
+	query := ctx.get_embeddings('query: ' + input_buffer) or { panic(err) }
 	scores := v_llama_cpp.rag_similarity(query, doc_embs) or { panic(err) }
 	max := v_llama_cpp.argmax(scores) or { -1 }
 	if max != -1 {

@@ -1,5 +1,4 @@
 # executable file generated from .vsh file
-build/*
 !build/README.md
 install
 uninstall

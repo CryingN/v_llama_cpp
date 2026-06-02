@@ -24,7 +24,7 @@ fn main() {
 			println('QUIT!')
 			return
 		}
-		prompt := '<｜User｜>${input_buffer}<｜Assistant｜><think>\n'
+		prompt := '<start_of_turn>user\n${input_buffer}<end_of_turn>\n<start_of_turn>model\n'
 		print('gemma: ')
 		ctx.ez_response(prompt, 512, 512, print_token) or { println('response failed.') }
 		ctx.memory_clear(true)

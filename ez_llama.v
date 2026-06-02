@@ -156,7 +156,12 @@ pub fn (context Context) get_embeddings(token string) ![]f32 {
 		return error('[Error] ./v_llama_cpp/ez_llama.v Context.get_embeddings(): Tokenization failed.')
 	}
 	mut batch := tokens.batch_get_one(n_tokens)
-	ctx.decode(batch)!
+	ctx.encode(batch) or {
+		println('err')
+		ctx.decode(batch) or {
+			panic(err)
+		}
+	}
 	result := get_embeddings(ctx, model)!
 	ctx.ez_free()
 	return result

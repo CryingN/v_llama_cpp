@@ -5,6 +5,7 @@
 #include "ggml.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 void v_llama_log_silent(enum ggml_log_level level, const char * text, void *
 user_data);
