@@ -152,16 +152,11 @@ pub fn (context Context) get_embeddings(token string) ![]f32 {
 	model := ctx.model()
 	vocab := model.vocab()
 	tokens := Tokens([]Token{ cap: token.len + 10 })
-	n_tokens := vocab.tokenize(token, tokens, token.len + 10, false, true) or {
+	n_tokens := vocab.tokenize(token, tokens, token.len + 10, true, true) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v Context.get_embeddings(): Tokenization failed.')
 	}
 	mut batch := tokens.batch_get_one(n_tokens)
-	ctx.encode(batch) or {
-		println('err')
-		ctx.decode(batch) or {
-			panic(err)
-		}
-	}
+	ctx.decode(batch) or { panic(err) }
 	result := get_embeddings(ctx, model)!
 	ctx.ez_free()
 	return result

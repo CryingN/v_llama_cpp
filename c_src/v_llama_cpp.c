@@ -6,6 +6,7 @@ void v_llama_log_silent(enum ggml_log_level level, const char * text, void * use
     (void) user_data;
 }
 
+/*
 float* v_llama_rag_similarity(const float* query, const float* docs, int dim, int n_docs) {
     if (query == NULL || docs == NULL || dim <= 0 || n_docs <= 0) {
         return NULL;
@@ -48,8 +49,8 @@ float* v_llama_rag_similarity(const float* query, const float* docs, int dim, in
     
     return scores;
 }
+*/
 
-/*
 float* v_llama_rag_similarity(const float* query, const float* docs, int dim, int n_docs) {
     struct ggml_init_params params = {
         .mem_size = 10 * 1024 * 1024,
@@ -75,7 +76,6 @@ float* v_llama_rag_similarity(const float* query, const float* docs, int dim, in
     ggml_free(ctx);
     return scores;
 }
-*/
 
 #ifdef _WIN32
     #include <windows.h>
