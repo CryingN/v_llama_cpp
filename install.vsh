@@ -231,7 +231,7 @@ if !exists(build) {
 	url := select_fastest_url([
 		'https://github.com/sakana-ctf/llama.cpp.git',
 		'https://atomgit.com/sakana-ctf/llama.cpp.git',
-	], 5) or { error_msg(err) }
+	], 5) or { panic(err) }
 	if system('git clone ${url}') != 0 {
 		panic('Clone llama.cpp failed.')
 	}
