@@ -1,6 +1,6 @@
 module v_llama_cpp
 
-#flag -lllama -lggml -lggml-base -lggml-cpu
+//#flag -lllama -lggml -lggml-base -lggml-cpu
 #flag -I @VMODROOT/build/include
 #flag -L @VMODROOT/build/lib
 #flag -I @VMODROOT/c_src
@@ -8,6 +8,7 @@ module v_llama_cpp
 #flag -Wl,-rpath="@VMODROOT/build/bin"
 #flag -Wl,-rpath="@VMODROOT/build/lib"
 
+/*
 // MacOS
 #flag darwin -I/opt/homebrew/include
 #flag darwin -L/opt/homebrew/lib
@@ -17,69 +18,70 @@ module v_llama_cpp
 #flag linux -I/usr/local/include
 #flag linux -L/usr/lib
 #flag linux -L/usr/local/lib
+*/
 
 #include "v_llama_cpp.h"
 
 struct C.llama_model_params {
 mut:
-    devices                      voidptr  // ggml_backend_dev_t *
-    tensor_buft_overrides        voidptr  // const struct llama_model_tensor_buft_override *
-    n_gpu_layers                 i32
-    split_mode                   int      // enum llama_split_mode
-    main_gpu                     i32
-    tensor_split                 &f32     // const float *
-    progress_callback            voidptr  // llama_progress_callback function pointer
-    progress_callback_user_data  voidptr  // void *
-    kv_overrides                 voidptr  // const struct llama_model_kv_override *
-    vocab_only                   bool
-    use_mmap                     bool
-    use_direct_io                bool
-    use_mlock                    bool
-    check_tensors                bool
-    use_extra_bufts              bool
-    no_host                      bool
-    no_alloc                     bool
+	devices                     voidptr // ggml_backend_dev_t *
+	tensor_buft_overrides       voidptr // const struct llama_model_tensor_buft_override *
+	n_gpu_layers                i32
+	split_mode                  int // enum llama_split_mode
+	main_gpu                    i32
+	tensor_split                &f32    // const float *
+	progress_callback           voidptr // llama_progress_callback function pointer
+	progress_callback_user_data voidptr // void *
+	kv_overrides                voidptr // const struct llama_model_kv_override *
+	vocab_only                  bool
+	use_mmap                    bool
+	use_direct_io               bool
+	use_mlock                   bool
+	check_tensors               bool
+	use_extra_bufts             bool
+	no_host                     bool
+	no_alloc                    bool
 }
 
 struct C.llama_model {}
 
 struct C.llama_context_params {
-    n_ctx              u32
-    n_batch            u32
-    n_ubatch           u32
-    n_seq_max          u32
-    n_rs_seq           u32
-    n_outputs_max      u32
-    n_threads          i32
-    n_threads_batch    i32
-    ctx_type           int  // enum llama_context_type
-    rope_scaling_type  int  // enum llama_rope_scaling_type
-    pooling_type       int  // enum llama_pooling_type
-    attention_type     int  // enum llama_attention_type
-    flash_attn_type    int  // enum llama_flash_attn_type
-    rope_freq_base     f32
-    rope_freq_scale    f32
-    yarn_ext_factor    f32
-    yarn_attn_factor   f32
-    yarn_beta_fast     f32
-    yarn_beta_slow     f32
-    yarn_orig_ctx      u32
-    defrag_thold       f32
-    cb_eval            voidptr  // ggml_backend_sched_eval_callback
-    cb_eval_user_data  voidptr  // void *
-    type_k             int      // enum ggml_type
-    type_v             int      // enum ggml_type
-    abort_callback     voidptr  // ggml_abort_callback
-    abort_callback_data voidptr  // void *
+	n_ctx               u32
+	n_batch             u32
+	n_ubatch            u32
+	n_seq_max           u32
+	n_rs_seq            u32
+	n_outputs_max       u32
+	n_threads           i32
+	n_threads_batch     i32
+	ctx_type            int // enum llama_context_type
+	rope_scaling_type   int // enum llama_rope_scaling_type
+	pooling_type        int // enum llama_pooling_type
+	attention_type      int // enum llama_attention_type
+	flash_attn_type     int // enum llama_flash_attn_type
+	rope_freq_base      f32
+	rope_freq_scale     f32
+	yarn_ext_factor     f32
+	yarn_attn_factor    f32
+	yarn_beta_fast      f32
+	yarn_beta_slow      f32
+	yarn_orig_ctx       u32
+	defrag_thold        f32
+	cb_eval             voidptr // ggml_backend_sched_eval_callback
+	cb_eval_user_data   voidptr // void *
+	type_k              int     // enum ggml_type
+	type_v              int     // enum ggml_type
+	abort_callback      voidptr // ggml_abort_callback
+	abort_callback_data voidptr // void *
 mut:
-    embeddings         bool
-    offload_kqv        bool
-    no_perf            bool
-    op_offload         bool
-    swa_full           bool
-    kv_unified         bool
-    samplers           voidptr  // struct llama_sampler_seq_config *
-    n_samplers         usize   // size_t
+	embeddings  bool
+	offload_kqv bool
+	no_perf     bool
+	op_offload  bool
+	swa_full    bool
+	kv_unified  bool
+	samplers    voidptr // struct llama_sampler_seq_config *
+	n_samplers  usize   // size_t
 }
 
 struct C.llama_context {}
@@ -87,13 +89,13 @@ struct C.llama_context {}
 struct C.llama_vocab {}
 
 struct C.llama_batch {
-    n_tokens i32
-    token    &i32      // llama_token *  (llama_token = int32_t)
-    embd     &f32      // float *
-    pos      &i32      // llama_pos *  (llama_pos = int32_t)
-    n_seq_id &i32      // int32_t *
-    seq_id   voidptr   // llama_seq_id **  (不支持 V 的双指针，用 voidptr)
-    logits   &i8       // int8_t *
+	n_tokens i32
+	token    &i32    // llama_token *  (llama_token = int32_t)
+	embd     &f32    // float *
+	pos      &i32    // llama_pos *  (llama_pos = int32_t)
+	n_seq_id &i32    // int32_t *
+	seq_id   voidptr // llama_seq_id **  (不支持 V 的双指针，用 voidptr)
+	logits   &i8     // int8_t *
 }
 
 struct C.llama_memory_t {}

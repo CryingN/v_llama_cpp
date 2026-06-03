@@ -28,7 +28,9 @@ v_llama_cpp 是 [llama.cpp](https://github.com/ggerganov/llama.cpp) 的 V 语言
 ```bash
 # Github下载
 git clone https://github.com/sakana-ctf/v_llama_cpp
-# 国内可使用Gitee下载
+# 国内可以使用Atomgit下载
+git clone https://atomgit.com/sakana-ctf/v_llama_cpp
+# 或者使用Gitee下载
 git clone https://gitee.com/sakana_ctf/v_llama_cpp
 ```
 
@@ -49,14 +51,6 @@ v unstall.vsh
 ```
 
 如果在更新前配置过v_llama_cpp, 安装时先卸载后重新安装.
-
-### 直接安装[future]
-
-未来计划使用以下命令直接安装:
-
-```bash
-v install v_llama_cpp
-```
 
 ## 使用方法
 

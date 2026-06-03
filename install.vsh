@@ -1,6 +1,7 @@
 #!/usr/bin/env v
 
 import runtime
+import time
 
 fn error_msg(msg string) {
 	println('[Error] Failed to configure llama.cpp.')
@@ -55,6 +56,32 @@ fn download(update_cmd string, search_cmd string, install_cmd string, packages [
 	for pkg in to_install {
 		system(install_cmd.replace('{pkg}', pkg))
 	}
+}
+
+
+fn check_speed(url string, ch chan string) {
+	if system('git ls-remote ${url}  > /dev/null 2>&1') != 0 {
+		return
+	}
+	ch <- url
+}
+
+fn select_fastest_url(urls []string, timeout int) !string {
+        ch := chan string{cap: urls.len}
+
+        for url in urls {
+                go check_speed(url, ch)
+        }
+
+        select {
+                winner := <-ch {
+                        return winner
+                }
+                time.Duration(timeout) * time.second {
+                        return error('select_fastest_url(): timeout, not found url.')
+                }
+        }
+        return error('select_fastest_url(): unexpected end of select.')
 }
 
 source := dir(@FILE)
@@ -200,6 +227,16 @@ if exists(llama_h_path) {
 	return
 }
 
+if !exists(build) {
+	url := select_fastest_url([
+		'https://github.com/sakana-ctf/llama.cpp.git',
+		'https://atomgit.com/sakana-ctf/llama.cpp.git',
+	], 5) or { error_msg(err) }
+	if system('git clone ${url}') != 0 {
+		panic('Clone llama.cpp failed.')
+	}
+}
+
 mut cmake_flags := '-DCMAKE_BUILD_TYPE=Release'
 choice := choice_type()
 match choice {
@@ -241,5 +278,4 @@ $if windows {
 	cmd := '.\\path.bat ${llama_bin.replace('/', '\\')}'
 	system(cmd)
 }
-
 
