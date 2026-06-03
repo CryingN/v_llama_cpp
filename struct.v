@@ -83,6 +83,7 @@ pub fn (context Context) n_batch() u32 {
 	return C.llama_n_batch(context)
 }
 
+
 /*
 	Model
 */

@@ -173,6 +173,7 @@ fn C.llama_state_load_file(ctx &C.llama_context,
 fn C.llama_n_embd(model &C.llama_model) int
 fn C.llama_encode(ctx &C.llama_context, batch C.llama_batch) int
 fn C.llama_get_embeddings(ctx &C.llama_context) &f32
+fn C.llama_get_embeddings_ith(ctx &C.llama_context, i int) &f32
 fn C.llama_get_seq_id(ctx &C.llama_context, seq_id int)
 fn C.llama_n_ctx(ctx &C.llama_context) u32
 fn C.llama_n_batch(ctx &C.llama_context) u32

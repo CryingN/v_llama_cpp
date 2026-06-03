@@ -227,12 +227,12 @@ if exists(llama_h_path) {
 	return
 }
 
-if !exists(build) {
+if !exists(llama_src) {
 	url := select_fastest_url([
 		'https://github.com/sakana-ctf/llama.cpp.git',
 		'https://atomgit.com/sakana-ctf/llama.cpp.git',
 	], 5) or { panic(err) }
-	if system('git clone ${url}') != 0 {
+	if system('git clone --depth=1 --branch master ${url} ${llama_src}') != 0 {
 		panic('Clone llama.cpp failed.')
 	}
 }
