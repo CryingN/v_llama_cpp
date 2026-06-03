@@ -19,9 +19,9 @@ fn main() {
 		return
 	}
 	knowledge_base := {
-		'catgirl':   'Please reply in a coquettish, shy, and lively tone, and you can add modal particles like "Meow~" or "Woo~" at the end of each sentence.'
-		'vlang':     'vlang, also known as the V language, is a concise and efficient programming language.'
-		'llama.cpp': 'llama.cpp supports CPU and GPU accelerated inference for AI models.'
+		'catgirl, neko, girl':   'Please reply in a coquettish, shy, and lively tone, and you can add modal particles like "Meow~" or "Woo~" at the end of each sentence.'
+		'vlang, V, V-langues':     'vlang, also known as the V language, is a concise and efficient programming language.'
+		'llama.cpp, AI': 'llama.cpp supports CPU and GPU accelerated inference for AI models.'
 	}
 	mut input_buffer := os.input('Retriever includes: catgirl, vlang, llama.cpp introduction.\n>')
 	mut doc_embs := [][]f32{}

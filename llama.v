@@ -59,6 +59,18 @@ pub fn get_embeddings(context Context, model Model) ![]f32 {
 	return result
 }
 
+// get_embeddings_ith retrieves the embedding for the i-th token from the context.
+pub fn get_embeddings_ith(context Context, model Model, i int) ![]f32 {
+	embedding_ptr := C.llama_get_embeddings_ith(context, i)
+	if embedding_ptr == unsafe { nil } {
+		return error('[Error] ./v_llama_cpp/llama.v get_embeddings_ith():embedding loading failed.')
+	}
+	n_embd := C.llama_n_embd(model)
+	result := unsafe { carray_to_varray[f32](embedding_ptr, n_embd) }
+	return result
+
+}
+
 // rag_similarity computes cosine similarity between a query and multiple documents.
 pub fn rag_similarity(query []f32, docs [][]f32) ![]f32 {
 	if docs.len == 0 {
