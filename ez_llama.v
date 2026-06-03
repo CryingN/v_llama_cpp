@@ -31,7 +31,7 @@ pub fn argmax(arr []f32) !int {
 }
 
 // ez_load_model loads a model from path.
-pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !Context {
+pub fn ez_load_model(path string, gpu_layers int, n_ctx u32, n_batch u32) !Context {
 	backend_init()
 	mut model_params := model_default_params()
 	model_params.set_n_gpu_layers(gpu_layers)
@@ -49,7 +49,7 @@ pub fn ez_load_model(path string, gpu_layers int, n_ctx int, n_batch int) !Conte
 }
 
 // ez_load_model downloads and loads a model from ModelUrl.
-pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_ctx int, n_batch int) !Context {
+pub fn (model_url ModelUrl) ez_load_model(model_path string, gpu_layers int, n_ctx u32, n_batch u32) !Context {
 	if os.exists(model_path) {
 		return ez_load_model(model_path, gpu_layers, n_ctx, n_batch)!
 	}
@@ -134,7 +134,7 @@ pub fn (context Context) ez_chat_template(messages []ChatMessage) !string {
 }
 
 // new creates a new context with the specified context size and batch size.
-pub fn (context Context) new(n_ctx int, n_batch int) !Context {
+pub fn (context Context) new(n_ctx u32, n_batch u32) !Context {
 	mut ctx_params := context_default_params()
 	ctx_params.n_ctx = n_ctx
 	ctx_params.n_batch = n_batch
@@ -147,14 +147,27 @@ pub fn (context Context) new(n_ctx int, n_batch int) !Context {
 }
 
 // get_embeddings tokenizes a string with special tokens and returns the embeddings.
-pub fn (context Context) get_embeddings(token string, add_special bool) ![]f32 {
-	model := context.model()
+pub fn (context Context) get_embeddings(token string) ![]f32 {
+	ctx := context.new(context.n_ctx(), context.n_batch())!
+	model := ctx.model()
 	vocab := model.vocab()
 	tokens := Tokens([]Token{ cap: token.len + 10 })
-	n_tokens := vocab.tokenize(token, tokens, token.len + 10, add_special, true) or {
+	n_tokens := vocab.tokenize(token, tokens, token.len + 10, true, true) or {
 		return error('[Error] ./v_llama_cpp/ez_llama.v Context.get_embeddings(): Tokenization failed.')
 	}
 	mut batch := tokens.batch_get_one(n_tokens)
-	context.decode(batch)!
-	return get_embeddings(context, model)!
+	ctx.decode(batch) or { panic(err) }
+	result := get_embeddings(ctx, model)!
+	ctx.ez_free()
+	return result
 }
+
+
+
+
+
+
+
+
+
+

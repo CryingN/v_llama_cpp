@@ -1,6 +1,4 @@
 # executable file generated from .vsh file
-build/*
-!build/README.md
 install
 uninstall
 
@@ -8,6 +6,13 @@ uninstall
 examples/*
 !examples/*.v
 !examples/*.c
+
+# build file.
+build/*
+!build/README.md
+
+# c_src file.
+c_src/ggml/*
 
 # test
 test/*

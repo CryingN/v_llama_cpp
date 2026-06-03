@@ -28,7 +28,9 @@ It is recommended to download the source code using git:
 ```bash
 # Download from Github
 git clone https://github.com/sakana-ctf/v_llama_cpp
-# For users in China, download from Gitee
+# For users in China, download from atomgit
+git clone https://atomgit.com/sakana-ctf/v_llama_cpp
+# Or download from Gitee
 git clone https://gitee.com/sakana_ctf/v_llama_cpp
 ```
 
@@ -49,14 +51,6 @@ v unstall.vsh
 ```
 
 If you had configured v_llama_cpp before updating, it will be uninstalled first and then reinstalled during the installation process.
-
-### Direct Installation [future]
-
-Direct installation using the following command is planned for the future:
-
-```bash
-v install v_llama_cpp
-```
 
 ## Usage
 
