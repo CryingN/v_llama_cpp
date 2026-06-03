@@ -168,12 +168,19 @@ pub fn (context Context) get_embeddings(token string) ![]f32 {
 		seq_id:   unsafe { nil }
 		logits:   logits.data
 	}
-	/*
-	mut batch := tokens.batch_get_one(n_tokens)
-	*/
 	ctx.decode(batch) or { panic(err) }
 
 	result := get_embeddings_ith(ctx, model, -1)!
 	ctx.ez_free()
 	return result
 }
+
+
+
+
+
+
+
+
+
+
