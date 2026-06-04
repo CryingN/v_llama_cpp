@@ -60,7 +60,7 @@ fn download(update_cmd string, search_cmd string, install_cmd string, packages [
 
 
 fn check_speed(url string, ch chan string) {
-	if system('git ls-remote ${url}  > /dev/null 2>&1') != 0 {
+	if system('git ls-remote ${url}') != 0 {
 		return
 	}
 	ch <- url
@@ -200,7 +200,7 @@ $if windows {
         if system('winget --help') == 0 {
                 download(
                         '',
-                        'winget list {pkg} >nul 2>&1',
+                        'winget list {pkg}',
                         'winget install -e --id {pkg}',
                         ['Git.Git', 'Kitware.CMake']
                 )

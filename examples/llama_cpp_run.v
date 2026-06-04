@@ -46,10 +46,8 @@ fn generate_response(ctx Context, prompt string) ! {
 fn main() {
 	v_llama_cpp.backend_init()
 	model_path := './google_gemma-3-1b-it-Q4_0.gguf'
-	println('正在加载模型: ${model_path} ...')
-
 	mut model_params := v_llama_cpp.model_default_params()
-	model_params.set_n_gpu_layers(-1)
+	model_params.n_gpu_layers = -1
 	mut model := v_llama_cpp.load_model_from_file(model_path, model_params) or {
 		println('模型加载失败')
 		return

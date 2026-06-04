@@ -7,7 +7,7 @@ import arrays {
 // backend_init initializes the llama.cpp backend.
 pub fn backend_init() {
 	C.llama_log_set(C.v_llama_log_silent, unsafe { nil })
-	C.ggml_backend_load_all()
+	//C.ggml_backend_load_all()
 	C.llama_backend_init()
 }
 
@@ -20,7 +20,7 @@ pub fn backend_free() {
 // load_model_from_file loads a model from file.
 pub fn load_model_from_file(path string, model_params ModelParams) !Model {
 	model := C.llama_model_load_from_file(path.str, model_params)
-	if model == C.NULL {
+	if model == unsafe { nil } {
 		return error('[Error] ./v_llama_cpp/llama.v load_model_form_file(): Model loading failed.')
 	}
 	return model

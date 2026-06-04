@@ -2,7 +2,6 @@
 #define V_LLAMA_CPP_H
 
 #include "llama.h"
-#include "ggml.h"
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
