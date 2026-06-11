@@ -1,11 +1,11 @@
 module v_llama_cpp
 
-#flag -lllama -lggml -lggml-base -lggml-cpu
 #flag -I @VMODROOT/build/include
-#flag -L @VMODROOT/build/lib
 #flag -I @VMODROOT/c_src
+#flag -L @VMODROOT/build/lib
 #flag @VMODROOT/c_src/v_llama_cpp.c
-#flag -Wl,-rpath="@VMODROOT/build/bin"
+#flag -lllama -lggml -lggml-base -lggml-cpu
+//#flag -Wl,-rpath="@VMODROOT/build/bin"
 #flag -Wl,-rpath="@VMODROOT/build/lib"
 
 /*
