@@ -8,7 +8,7 @@ fn main() {
 	for f in examples {
 		if !f.ends_with('.v') { continue }
 		example_path := os.join_path(examples_dir, f)
-		res := os.execute('v ${example_path}')
+		res := os.execute('v -cc gcc ${example_path}')
 		if res.exit_code == 0 {
 			println('PASS: ${f}')
 		} else {

@@ -1,10 +1,10 @@
 module v_llama_cpp
 
-#flag -lllama -lggml -lggml-base -lggml-cpu
 #flag -I @VMODROOT/build/include
-#flag -L @VMODROOT/build/lib
 #flag -I @VMODROOT/c_src
+#flag -L @VMODROOT/build/lib
 #flag @VMODROOT/c_src/v_llama_cpp.c
+#flag -lllama -lggml -lggml-base -lggml-cpu
 #flag -Wl,-rpath="@VMODROOT/build/bin"
 #flag -Wl,-rpath="@VMODROOT/build/lib"
 
@@ -23,7 +23,7 @@ module v_llama_cpp
 #include "v_llama_cpp.h"
 
 struct C.llama_model_params {
-mut:
+pub mut:
 	devices                     voidptr // ggml_backend_dev_t *
 	tensor_buft_overrides       voidptr // const struct llama_model_tensor_buft_override *
 	n_gpu_layers                i32
@@ -46,6 +46,7 @@ mut:
 struct C.llama_model {}
 
 struct C.llama_context_params {
+pub mut:
 	n_ctx               u32
 	n_batch             u32
 	n_ubatch            u32
@@ -73,7 +74,6 @@ struct C.llama_context_params {
 	type_v              int     // enum ggml_type
 	abort_callback      voidptr // ggml_abort_callback
 	abort_callback_data voidptr // void *
-mut:
 	embeddings  bool
 	offload_kqv bool
 	no_perf     bool
@@ -89,6 +89,7 @@ struct C.llama_context {}
 struct C.llama_vocab {}
 
 struct C.llama_batch {
+pub mut:
 	n_tokens i32
 	token    &i32    // llama_token *  (llama_token = int32_t)
 	embd     &f32    // float *

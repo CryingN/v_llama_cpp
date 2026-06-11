@@ -1,15 +1,7 @@
-//gcc llama_cpp_run.c -o llama_cpp_run -lllama -lggml -lggml-base
+//gcc llama_cpp_run.c -o llama_cpp_run -I$HOME/.vmodules/v_llama_cpp/build/include -I$HOME/.vmodules/v_llama_cpp/c_src -L$HOME/.vmodules/v_llama_cpp/build/lib $HOME/.vmodules/v_llama_cpp/c_src/v_llama_cpp.c -lllama -lggml -lggml-base -lggml-cpu -Wl,-rpath,"$HOME/.vmodules/v_llama_cpp/build/bin" -Wl,-rpath,"$HOME/.vmodules/v_llama_cpp/build/lib"
 
-#include <llama.h>
+#include "v_llama_cpp.h"
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-void v_llama_log_silent(enum ggml_log_level level, const char * text, void * user_data) {
-    (void) level;
-    (void) text;
-    (void) user_data;
-}
 
 int argmax(float *arr, int n) {
         int max_idx = 0;
@@ -76,12 +68,12 @@ void generate_response(struct llama_context *ctx, const char *prompt) {
 int main() {
 	llama_log_set(v_llama_log_silent, NULL);
         llama_backend_init();
+        const char *model_path = "./google_gemma-3-1b-it-Q4_0.gguf";
 	
 	// 1. 构建模型
         struct llama_model_params model_params = llama_model_default_params();
         model_params.n_gpu_layers = -1;
 
-        const char *model_path = "./google_gemma-3-1b-it-Q4_0.gguf";
         struct llama_model *model = llama_model_load_from_file(model_path, model_params);
 
         if (model == NULL) {
@@ -92,8 +84,8 @@ int main() {
 
         // 2. 创建上下文
         struct llama_context_params ctx_params = llama_context_default_params();
-        ctx_params.n_ctx = 4096;
-        ctx_params.n_batch = 256;
+        ctx_params.n_ctx = 2048;
+        ctx_params.n_batch = 512;
 
         struct llama_context *ctx = llama_init_from_model(model, ctx_params);
         if (ctx == NULL) {
