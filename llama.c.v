@@ -5,7 +5,7 @@ module v_llama_cpp
 #flag -L @VMODROOT/build/lib
 #flag @VMODROOT/c_src/v_llama_cpp.c
 #flag -lllama -lggml -lggml-base -lggml-cpu
-//#flag -Wl,-rpath="@VMODROOT/build/bin"
+#flag -Wl,-rpath="@VMODROOT/build/bin"
 #flag -Wl,-rpath="@VMODROOT/build/lib"
 
 /*
